@@ -53,11 +53,19 @@ body {
 }
 
 .fas.fa-poll.True, .fas.fa-poll.true {
-    color: hsl(48, 100%, 67%);
+    color: hsl(348, 100%, 61%);
 }
 
 .fas.fa-check-square.True, .fas.fa-check-square.true {
     color: hsl(141, 71%, 48%);
+}
+
+.column.is-full:not(+ .column.work) {
+    display: none;
+}
+
+.pagination-previous {
+    max-width: 90%;
 }
 
 .centered {
