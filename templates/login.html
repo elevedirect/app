@@ -31,6 +31,7 @@
         </span>
       </div>
       <p class="help is-danger"><i class="fas fa-exclamation is-danger"></i>&nbsp;Erreur sur le mot de passe ou nom d'utilisateur</p>
+      <p class="help is-danger error"><i class="fas fa-bug is-danger error"></i>&nbsp;Une erreur est survenue !</p>
       <p class="help is-warning"><i class="fas fa-exclamation-triangle is-warning"></i>&nbsp;Session expirée</p>
     </div>
     <div class="field">
@@ -52,12 +53,17 @@
 </div>
 <style>
     {% if not failed %}
-    .is-danger {
+    .is-danger:not(.error) {
         display: none;
     }
     {% endif %}
     {% if not expired %}
     .is-warning {
+        display: none;
+    }
+    {% endif %}
+    {% if not error %}
+    .error {
         display: none;
     }
     {% endif %}

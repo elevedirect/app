@@ -122,14 +122,15 @@ def load_dynamic(callback):
         final_average = round_up(final_average, 2)
         notes.append({'data': periode_notes, 'code': periode, 'nom': nom, 'average': final_average})
     work_data = school.get_work(account['token'], account['id'])
-    day_work_data = school.get_work_date(account['token'], account['id'], '2022-06-10')
+    # day_work_data = school.get_work_date(account['token'], account['id'], '2022-06-10')
     return render_template(callback, account=account, notes=notes, work=work_data)
 
 
 @app.route('/')
 def root():
     expired = request.args.get('expired')
-    return render_template('login.html', expired=expired)
+    error = request.args.get('error')
+    return render_template('login.html', expired=expired, error=error)
 
 
 @app.route('/home')
@@ -164,6 +165,11 @@ def login():
         response.set_cookie('account', json.dumps(credentials))
         return response
     return render_template('login.html', failed='true')
+
+
+@app.errorhandler(Exception)
+def error(_error):
+    return redirect('/?error=true')
 
 
 if __name__ == '__main__':

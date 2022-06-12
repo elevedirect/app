@@ -39,7 +39,7 @@ class EcoleDirect:
             "date": date
         }
         response = self._request(DATE_WORK, data)
-        print(response)
+        # print(response)
         return response
 
     def get_notes(self, token, identifiant):
@@ -82,9 +82,9 @@ class EcoleDirect:
             # print(response)
             return formatted_response
         except Exception as error:
-            # print(f'Error while fetching notes: {error.__class__.__name__}')
-            # return None
-            raise error
+            print(f'Error while fetching notes: {error.__class__.__name__}')
+            return None
+            # raise error
 
     def login(self, username, password):
         try:
