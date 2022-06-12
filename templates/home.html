@@ -131,29 +131,36 @@
   {% endfor %}
 </div>
 <div class="main homework" style="display: none">
+  <div class="columns">
+    <div class="column is-full" style="text-align: center" id="worksdates">
+      <b>{{work[0].showing_date}} - {{work[-1].showing_date}}</b>
+    </div>
+  </div>
   <div class="columns" id="homeworks-container">
     {% for date in work %}
-      <div class="column is-full">
-        <b>{{date.showing_date}}</b>
-      </div>
-      {% for homework in date.homeworks %}
-        <div class="column work">
-          <article class="message content">
-            <span class="centered notification"><code>{{homework.matiere}}</code></span>
-            <blockquote class="message-body">
-              Evaluation: <i class="fas fa-poll {{homework.interrogation}}"></i>&nbsp;Effectue: <i class="fas fa-check-square {{homework.effectue}}"></i>
-              <br>
-            </blockquote>
-          </article>
+      {% if date.homeworks|length > 0 %}
+        <div class="column is-full">
+          <b>{{date.showing_date}}</b>
         </div>
-      {% endfor %}
+        {% for homework in date.homeworks %}
+          <div class="column work">
+            <article class="message content">
+              <span class="centered notification"><code>{{homework.matiere}}</code></span>
+              <blockquote class="message-body">
+                Evaluation: <i class="fas fa-poll {{homework.interrogation}}"></i>&nbsp;Effectue: <i class="fas fa-check-square {{homework.effectue}}"></i>
+                <br>
+              </blockquote>
+            </article>
+          </div>
+        {% endfor %}
+      {% endif %}
     {% endfor %}
   </div>
-  <nav class="pagination is-right" role="navigation" aria-label="pagination">
-    <a class="pagination-previous" data-action="{{work[0].date}}|{{work[-1].date}}" onclick="switchWork(this)">Cette semaine</a>
+  <nav class="pagination" role="navigation" aria-label="pagination">
+    <a class="pagination-previous is-current" data-action="{{current_week[0]}}|{{current_week[-1]}}" onclick="switchWork(this)">Semaine Actuelle<span></span></a>
     <ul class="pagination-list">
-      <li><a class="pagination-link" aria-label="Goto page 1">Semaine du <span></span></a></li>
-      <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
+      <li><a class="pagination-link" data-action="{{previous_week[0]}}|{{previous_week[-1]}}" onclick="switchWork(this)" id="previouswork"><i class="fas fa-arrow-left"></i>&nbsp;Semaine précédente</a></li>
+      <li><a class="pagination-link" data-action="{{next_week[0]}}|{{next_week[-1]}}" onclick="switchWork(this)" id="nextwork">Semaine suivante&nbsp;<i class="fas fa-arrow-right"></i></a></li>
     </ul>
   </nav>
 </div>

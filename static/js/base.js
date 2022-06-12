@@ -1,12 +1,21 @@
 const sections = document.querySelectorAll('.main')
 const actions = document.querySelectorAll('.data-action')
 const homeworksContainer = document.getElementById('homeworks-container')
-let dataAction, dates, from, to, fromDateObject, fromYear, fromMonth, fromDay, fromDateString, toDateObject, toYear, toMonth, toDay, toDateString, currentDateObject, currentDateString
+const nextWorkButton = document.getElementById('nextwork')
+const previousWorkButton = document.getElementById('previouswork')
+let dataAction, dates, from, to, fromDateObject, fromYear, fromMonth, fromDay, fromDateString, toDateObject, toYear,
+    toMonth, toDay, toDateString, currentDateObject, currentDateString, sampleDate, previousWeek, nextWeek
 var frenchDate
 
 Date.prototype.addDays = function (days) {
     let date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
+    return date;
+}
+
+Date.prototype.removeDays = function (days) {
+    let date = new Date(this.valueOf());
+    date.setDate(date.getDate() - days);
     return date;
 }
 
@@ -44,7 +53,11 @@ function expand(periode) {
 }
 
 async function share() {
-    await navigator.share({'url': 'http://eleve-direct.server.camarm.fr', 'text': 'Moyennes, carte de cantine et plus en core avec Eleve Direct !', 'title': 'Rejoins Eleve Direct !'})
+    await navigator.share({
+        'url': 'http://eleve-direct.server.camarm.fr',
+        'text': 'Moyennes, carte de cantine et plus en core avec Eleve Direct !',
+        'title': 'Rejoins Eleve Direct !'
+    })
 }
 
 window.onload = () => {
@@ -83,22 +96,33 @@ function switchWork(element) {
     toMonth = parseInt(to.split('-')[1])
     toDay = parseInt(to.split('-')[2])
     toDateObject.setFullYear(toYear, toMonth, toDay)
+    toDateString = `${toDateObject.getFullYear()}-${toDateObject.getFullMonth()}-${toDateObject.getFullDay()}`
+    fetch(`/french/${fromDateString}`)
+        .then(resp => { return resp.text() })
+        .then(frenchFromDate => {
+            fetch(`/french/${toDateString}`)
+                .then(resp => { return resp.text() })
+                .then(frenchToDate => {
+                    document.getElementById('worksdates').innerHTML = `<b>${frenchFromDate} - ${frenchToDate}</b>`
+                })
+        })
     toDateObject = toDateObject.addDays(1)
     toDateString = `${toDateObject.getFullYear()}-${toDateObject.getFullMonth()}-${toDateObject.getFullDay()}`
     currentDateObject = fromDateObject
     currentDateString = `${currentDateObject.getFullYear()}-${currentDateObject.getFullMonth()}-${currentDateObject.getFullDay()}`
     while (currentDateString !== toDateString) {
-        console.log(currentDateString)
         fetch(`/work/${currentDateString}`)
-            .then(response => { return response.json() })
+            .then(response => {
+                return response.json()
+            })
             .then(json => {
-                console.log(frenchDate)
-                homeworksContainer.innerHTML += `
+                if (json['matieres'][0]['aFaire'] !== undefined) {
+                    homeworksContainer.innerHTML += `
                 <div class="column is-full">
                   <b>${json['frenchDate']}</b>
                 </div>`
-                json['matieres'].forEach(matiere => {
-                    homeworksContainer.innerHTML += `
+                    json['matieres'].forEach(matiere => {
+                        homeworksContainer.innerHTML += `
                     <div class="column work">
                       <article class="message content">
                         <span class="centered notification"><code>${matiere.matiere}</code></span>
@@ -108,9 +132,18 @@ function switchWork(element) {
                         </blockquote>
                       </article>
                     </div>`
-                })
+                    })
+                }
             })
         currentDateObject = currentDateObject.addDays(1)
         currentDateString = `${currentDateObject.getFullYear()}-${currentDateObject.getFullMonth()}-${currentDateObject.getFullDay()}`
     }
+    sampleDate = toDateObject.addDays(6)
+    nextWeek = `${toDateString}|${sampleDate.getFullYear()}-${sampleDate.getFullMonth()}-${sampleDate.getFullDay()}`
+    sampleDate = fromDateObject.removeDays(6)
+    fromDateObject = fromDateObject.removeDays(1)
+    fromDateString = `${fromDateObject.getFullYear()}-${fromDateObject.getFullMonth()}-${fromDateObject.getFullDay()}`
+    previousWeek = `${sampleDate.getFullYear()}-${sampleDate.getFullMonth()}-${sampleDate.getFullDay()}|${fromDateString}`
+    previousWorkButton.setAttribute('data-action', previousWeek)
+    nextWorkButton.setAttribute('data-action', nextWeek)
 }

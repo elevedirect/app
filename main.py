@@ -15,6 +15,20 @@ app = Flask('Eleve Direct')
 school = ED()
 
 
+def getCurrentWeek():
+    date = datetime.datetime.now()
+    dates = [(date + datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range(0 - date.weekday(), 7 - date.weekday())]
+    return dates
+
+
+def getPreviousAndNextWeek():
+    date = datetime.datetime.now() - datetime.timedelta(days=7)
+    previous_dates = [(date + datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range(0 - date.weekday(), 7 - date.weekday())]
+    date = datetime.datetime.now() + datetime.timedelta(days=7)
+    next_dates = [(date + datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range(0 - date.weekday(), 7 - date.weekday())]
+    return previous_dates, next_dates
+
+
 def generateQrcode(data, name):
     logo = Image.open(f'static/legal/elevedirectqr.png')
     basewidth = 50
@@ -124,7 +138,8 @@ def load_dynamic(callback):
         notes.append({'data': periode_notes, 'code': periode, 'nom': nom, 'average': final_average})
     work_data = school.get_work(account['token'], account['id'])
     # day_work_data = school.get_work_date(account['token'], account['id'], '2022-06-10')
-    return render_template(callback, account=account, notes=notes, work=work_data)
+    previous_week, next_week = getPreviousAndNextWeek()
+    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week)
 
 
 @app.route('/')
