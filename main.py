@@ -85,7 +85,7 @@ def calculateAverage(matieres):
             sum_notes = 0
             coefficients_sum = 0
             for note in matiere['notes']:
-                if note['valeur'] in ['Disp\xa0', 'Abs\xa0']:
+                if note['valeur'] in ['Disp\xa0', 'Abs\xa0', 'NE\xa0', 'EA\xa0']:
                     continue
                 if note['sur'] != '20':
                     note_sur = float(note['sur'].replace(',', '.'))
