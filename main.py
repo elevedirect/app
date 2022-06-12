@@ -5,12 +5,28 @@ import qrcode
 import math
 import markdown
 import locale
+from PIL import Image
 
 
 locale.setlocale(locale.LC_ALL, "fr_FR.UTF-8")
 
 app = Flask('Eleve Direct')
 school = ED()
+
+
+def generateQrcode(data, name):
+    logo = Image.open(f'static/legal/elevedirectqr.png')
+    basewidth = 50
+    wpercent = (basewidth / float(logo.size[0]))
+    hsize = int((float(logo.size[1]) * float(wpercent)))
+    logo = logo.resize((basewidth, hsize))
+    qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H)
+    qr.add_data(data)
+    qr.make()
+    qrimg = qr.make_image(fill_color="black", back_color="white").convert('RGBA')
+    pos = ((qrimg.size[0] - logo.size[0]) // 2, (qrimg.size[1] - logo.size[1]) // 2)
+    qrimg.paste(logo, pos)
+    qrimg.save(f'cache/{name}.png')
 
 
 def round_up(n, decimals=0):
@@ -134,8 +150,7 @@ def qr():
     zero_times = 3 - len(student_id)
     last_number = '1' + ('0' * zero_times) + student_id + "0"
     data = f"eleve||{student_id}||{last_number}"
-    qrimg = qrcode.make(data)
-    qrimg.save(f'cache/{student_id}.png')
+    generateQrcode(data, student_id)
     return send_file(f'cache/{student_id}.png')
 
 

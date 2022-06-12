@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Eleve Direct - Se connecter</title>
   <link rel="icon" href="/static/legal/elevedirectbleue.png">
+  <link rel="stylesheet" href="/static/css/fontawesome/css/all.min.css">
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="manifest" href="/static/js/manifest.json">
 </head>
@@ -15,7 +16,7 @@
   <p>Une application simple, permettant de retrouver sa carte de cantine, ses moyennes, son emploie du temps, ses devoirs et d'être notifié quand il faut réviser pour un contrôle <sup>Non officiel</sup></p>
   <article class="message">
     <div class="message-body">
-      En utilisant ce service vous accepter les <a href="/cgu">Condition D'utilisation</a>.
+      En utilisant ce service vous accepter les <a href="/cgu">Condition D'utilisation&nbsp;<i class="fas fa-file-invoice"></i></a>.
     </div>
   </article>
 </div>
@@ -23,22 +24,28 @@
   <form action="/login" method="post">
     <div class="field">
       <label class="label">Identifiant</label>
-      <div class="control">
+      <div class="control has-icons-right">
         <input class="input" type="text" placeholder="John Doe" name="username">
+        <span class="icon is-small is-right">
+          <i class="fas fa-user"></i>
+        </span>
       </div>
-      <p class="help is-danger">Erreur sur le mot de passe ou nom d'utilisateur</p>
-      <p class="help is-warning">Session expirée</p>
+      <p class="help is-danger"><i class="fas fa-exclamation is-danger"></i>&nbsp;Erreur sur le mot de passe ou nom d'utilisateur</p>
+      <p class="help is-warning"><i class="fas fa-exclamation-triangle is-warning"></i>&nbsp;Session expirée</p>
     </div>
     <div class="field">
       <label class="label">Mot de passe</label>
-      <div class="control">
+      <div class="control has-icons-right">
         <input class="input" type="password" placeholder="*****" name="password">
+        <span class="icon is-small is-right">
+          <i class="fas fa-key"></i>
+        </span>
       </div>
-      <p class="help is-danger">Erreur sur le mot de passe ou nom d'utilisateur</p>
+      <p class="help is-danger"><i class="fas fa-exclamation is-danger"></i>&nbsp;Erreur sur le mot de passe ou nom d'utilisateur</p>
     </div>
     <div class="field">
       <div class="control">
-        <button class="button is-link">Se connecter</button>
+        <button class="button is-link">Se connecter&nbsp;<i class="fas fa-paper-plane"></i></button>
       </div>
     </div>
   </form>

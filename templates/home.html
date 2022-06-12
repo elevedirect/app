@@ -8,7 +8,7 @@
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <p class="title is-4">{{account.prenom}} {{account.nom}}</p>
+          <p class="title is-4"><i class="fas fa-graduation-cap"></i>&nbsp;{{account.prenom}} {{account.nom}}</p>
           <p class="subtitle is-6">élève du <b>{{account.college}}</b> en classe de <b>{{account.classe}}</b></p>
         </div>
       </div>
@@ -185,6 +185,10 @@
         Eleve Direct logo, EcoleDirect logo
       </figcaption>
     </figure>
+    <h1>Aidez nous</h1>
+    <p>Aidez nous à améliorer le projet en envoyant un retour, une idée d'amélioration... ou en partageant cette application
+      <a href="#contact" onclick="share()">Partager&nbsp;<i class="fas fa-share-alt"></i></a>
+    </p>
   </div>
 </div>
 {% endblock %}

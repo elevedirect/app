@@ -23,10 +23,12 @@ function expand(periode) {
     document.getElementById(periode + 'icon').classList.toggle('active')
 }
 
+async function share() {
+    await navigator.share({'url': 'http://eleve-direct.server.camarm.fr', 'text': 'Moyennes, carte de cantine et plus en core avec Eleve Direct !', 'title': 'Rejoins Eleve Direct !'})
+}
+
 window.onload = () => {
-    console.log(location)
     let anchor = location.hash.replaceAll('#', '')
-    console.log(anchor)
     if (anchor === undefined || anchor === null || anchor === '') {
         console.log('Loading homepage')
         sections.forEach(section => {
