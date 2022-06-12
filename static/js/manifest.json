@@ -2,8 +2,8 @@
   "name": "Eleve Direct",
   "short_name": "Eleve Direct",
   "description": "Une interface adaptée aux élèves pour Ecoledirect",
-  "theme_color": "#ff",
-  "background_color": "#3273dc",
+  "theme_color": "#3273dc",
+  "background_color": "#fff",
   "icons": [
     {
       "src": "/static/legal/elevedirectbleue.png",
