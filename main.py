@@ -169,6 +169,7 @@ def login():
 
 @app.errorhandler(Exception)
 def error(_error):
+    print(_error)
     return redirect('/?error=true')
 
 
