@@ -1,0 +1,108 @@
+body {
+    max-width: 100vw;
+    overflow: hidden;
+}
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2em;
+}
+.card {
+    margin-top: 1em;
+}
+.card.qr {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.note {
+    display: none;
+    width: 100%;
+}
+
+.note.active {
+    display: unset;
+}
+
+.nav-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: max-content;
+    margin: auto;
+}
+
+.columns {
+    width: 90%;
+}
+
+.level {
+    padding-top: 1.5rem;
+}
+
+.fas.fa-angle-down {
+    transition: .5s ease-in-out;
+}
+
+.fas.fa-angle-down.active {
+    rotate: -90deg;
+}
+
+.fas.fa-poll.True {
+    color: hsl(48, 100%, 67%);
+}
+
+.fas.fa-check-square.True {
+    color: hsl(141, 71%, 48%);
+}
+
+.centered {
+    margin: auto;
+    text-align: center;
+    display: block;
+    padding: .8em 0 0;
+    margin-bottom: 0 !important;
+}
+
+.with-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notification {
+    margin-bottom: 0;
+}
+
+.message-body {
+    border: none !important;
+}
+
+.message {
+    border-left: 5px solid #dbdbdb;
+    border-radius: 0px 0px 0px 4px;
+}
+
+.notification code {
+    background-color: hsl(0, 0%, 86%);
+    border-radius: .375em;
+    color: hsl(0, 0%, 29%);
+}
+
+.table.full {
+    max-width: 100vw !important;
+    min-width: 100vw !important;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100vw;
+    margin-bottom: 2em;
+    font-size: .9em !important;
+}
+
+.table.full td {
+    overflow: hidden;
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/fontawesome/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/static/legal/elevedirectbleue.png">
+  <link rel="manifest" href="/static/js/manifest.json">
+  <title>Eleve Direct - {% block name %}{% endblock%}</title>
+</head>
+<body>
+<nav class="level">
+  <div class="nav-wrapper">
+    <p class="level-item has-text-centered">
+      <a class="link is-info data-action" href="#home" data-action="home"><i class="fas fa-home"></i>&nbsp;Accueil</a>
+    </p>
+    <p class="level-item has-text-centered">
+      <a class="link is-info data-action" href="#notes" data-action="notes"><i class="fas fa-thumbtack"></i>&nbsp;Notes</a>
+    </p>
+    <p class="level-item has-text-centered">
+      <a class="link is-info data-action" href="#homework" data-action="homework"><i class="fas fa-briefcase"></i>&nbsp;Devoirs</a>
+    </p>
+    <p class="level-item has-text-centered">
+      <a class="link is-info data-action" href="#contact" data-action="contact"><i class="fas fa-id-card"></i>&nbsp;Contact</a>
+    </p>
+  </div>
+</nav>
+{% block content %}
+{% endblock %}
+<script src="/static/js/base.js"></script>
+</body>
+</html>

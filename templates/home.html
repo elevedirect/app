@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block name %}Accueil{% endblock %}
+
+{% block content %}
+<div class="main home">
+  <div class="card">
+    <div class="card-content">
+      <div class="media">
+        <div class="media-content">
+          <p class="title is-4">{{account.prenom}} {{account.nom}}</p>
+          <p class="subtitle is-6">élève du <b>{{account.college}}</b> en classe de <b>{{account.classe}}</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card qr">
+    <div class="card-image">
+      <figure class="media is-64by64">
+        <img src="/cantine-qr" alt="Carte de Cantine">
+      </figure>
+    </div>
+    <div class="card-content">
+      <div class="media">
+        <div class="media-content">
+          <p class="subtitle is-5">Votre carte de cantine (Sacré Coeur Vercel)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="main notes" style="display: none">
+  {% for periode in notes %}
+  <h1 class="subtitle" onclick="expand('{{periode.code}}')">{{periode.nom}}&nbsp;<i class="fas fa-angle-down" id="{{periode.code}}icon"></i></h1>
+  <div class="note" id="{{periode.code}}">
+    <table class="table is-striped full">
+      <thead>
+      <tr>
+        <th>Matière</th>
+        <th>Note<sup><abbr title="note">(Coef)</abbr></sup></th>
+        <th>Moyenne</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for matiere in periode.data %}
+        <tr>
+          <td><b>{{matiere.nom}}</b></td>
+          <td>
+              {% for note in matiere.notes %}
+                <span onclick="notePopup(this)">{{note.valeur}}/{{note.sur}}<sup><abbr>({{note.coef}})</abbr></sup>
+                <div class="modal">
+                  <div class="modal-background"></div>
+                  <div class="modal-content">
+                    <h1 class="title" style="color: #fff;">Plus d'informations:</h1>
+                    <table class="table is-bordered" style="width: 100%">
+                      <thead>
+                      <tr>
+                        <th>Info</th>
+                        <th>Val. Correspondante</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {% for key in note.keys() %}
+                      <tr>
+                        <td><b>{{key}}:</b></td>
+                        <td>
+                          {{note[key]}}
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <button class="modal-close is-large" aria-label="close" onclick="notePopup(this.parent)"></button>
+            </div></span>
+              {% endfor %}
+          </td>
+          <td>
+            {{matiere.average}}
+          </td>
+        </tr>
+        {% if matiere['has-sous-mat'] %}
+          {% for sous_matiere in matiere['sous-matieres'] %}
+            <tr>
+              <td>&nbsp;&nbsp;{{sous_matiere.nom}}</td>
+              <td>
+                {% for note in sous_matiere.notes %}
+                <span onclick="notePopup(this)">{{note.valeur}}/{{note.sur}}<sup><abbr>({{note.coef}})</abbr></sup>
+                            <div class="modal">
+                              <div class="modal-background"></div>
+                              <div class="modal-content">
+                                <h1 class="title" style="color: #fff;">Plus d'informations:</h1>
+                                <table class="table is-bordered" style="width: 100%">
+                                  <thead>
+                                  <tr>
+                                    <th>Info</th>
+                                    <th>Val. Correspondante</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  {% for key in note.keys() %}
+                                  <tr>
+                                    <td><b>{{key}}:</b></td>
+                                    <td>
+                                      {{note[key]}}
+                                    </td>
+                                  </tr>
+                                  {% endfor %}
+                                  </tbody>
+                                </table>
+                              </div>
+                              <button class="modal-close is-large" aria-label="close" onclick="notePopup(this.parent)"></button>
+                        </div></span>
+                {% endfor %}
+              </td>
+              <td>
+                {{sous_matiere.average}}
+              </td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+        <tr>
+          <td><b>Moyenne</b></td>
+          <td><b>{{periode.nom}}</b></td>
+          <td>{{periode.average}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+</div>
+<div class="main homework" style="display: none">
+  <div class="columns">
+    {% for date in work %}
+      <div class="column is-full">
+        <b>{{date.showing_date}}</b>
+      </div>
+      {% for homework in date.homeworks %}
+        <div class="column work">
+          <article class="message content">
+            <span class="centered notification"><code>{{homework.matiere}}</code></span>
+            <blockquote class="message-body">
+              Evaluation: <i class="fas fa-poll {{homework.interrogation}}"></i>&nbsp;Effectue: <i class="fas fa-check-square {{homework.effectue}}"></i>
+              <br>
+            </blockquote>
+          </article>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+  <nav class="pagination is-right" role="navigation" aria-label="pagination">
+    <a class="pagination-previous">Semaine</a>
+    <ul class="pagination-list">
+      <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
+      <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
+      <li><a class="pagination-link" aria-label="Page 46">46</a></li>
+      <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
+      <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+    </ul>
+  </nav>
+</div>
+<div class="main contact" style="display: none">
+  <div class="content" style="padding: 1em">
+    <h1>Contact</h1>
+    <p><b>Eleve Direct</b> par CAMARM DEV, développeur <b>CAMARM Inc.</b> (<a href="https://www.camarm.dev" target="_blank">https://www.camarm.dev</a>).</p>
+    <ul>
+      <li>Email: <b>armand@camponvo.xyz</b></li>
+      <li>Site web: <b><a href="https://www.camarm.dev" target="_blank">https://www.camarm.dev</a></b></li>
+      <li>Github: <b><a href="https://github.com/camarm-dev" target="_blank">https://github.com/camarm-dev</a></b></li>
+      <li>Gitlab: <b><a href="https://gitlab.com/camarm">https://gitlab.com/camarm</a></b></li>
+    </ul>
+    <h1>Logos / icon / style de pages</h1>
+    <p>Ce projet utilise les outils</p>
+    <ul>
+      <li>Fontawesome: <b><a href="https://fontawesome.com">https://fontawesome.com</a></b></li>
+      <li>Bulma: <b><a href="https://bulma.io">https://bulma.io</a></b></li>
+      <li>Python: <b><a href="https://python.org">https://python.org</a></b></li>
+    </ul>
+    <p>Les logos <b>Eleve Direct</b> sont inspirés des logos EcoleDirect:</p>
+    <figure>
+      <img src="/static/legal/elevedirectbleue.png">
+      <img src="/static/legal/logoEcoleDirecte.png">
+      <figcaption>
+        Eleve Direct logo, EcoleDirect logo
+      </figcaption>
+    </figure>
+  </div>
+</div>
+{% endblock %}
