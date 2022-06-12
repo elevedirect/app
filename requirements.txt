@@ -1,0 +1,6 @@
+qrcode~=7.3.1
+Markdown~=3.3.4
+ecoledirect~=4.0.0
+Flask~=2.0.1
+Pillow~=7.2.0
+requests~=2.25.1
