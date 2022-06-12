@@ -52,11 +52,11 @@ body {
     rotate: -90deg;
 }
 
-.fas.fa-poll.True {
+.fas.fa-poll.True, .fas.fa-poll.true {
     color: hsl(48, 100%, 67%);
 }
 
-.fas.fa-check-square.True {
+.fas.fa-check-square.True, .fas.fa-check-square.true {
     color: hsl(141, 71%, 48%);
 }
 

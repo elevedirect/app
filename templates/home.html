@@ -131,7 +131,7 @@
   {% endfor %}
 </div>
 <div class="main homework" style="display: none">
-  <div class="columns">
+  <div class="columns" id="homeworks-container">
     {% for date in work %}
       <div class="column is-full">
         <b>{{date.showing_date}}</b>
@@ -150,13 +150,10 @@
     {% endfor %}
   </div>
   <nav class="pagination is-right" role="navigation" aria-label="pagination">
-    <a class="pagination-previous">Semaine</a>
+    <a class="pagination-previous" data-action="{{work[0].date}}|{{work[-1].date}}" onclick="switchWork(this)">Cette semaine</a>
     <ul class="pagination-list">
-      <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
+      <li><a class="pagination-link" aria-label="Goto page 1">Semaine du <span></span></a></li>
       <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
-      <li><a class="pagination-link" aria-label="Page 46">46</a></li>
-      <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
-      <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
     </ul>
   </nav>
 </div>

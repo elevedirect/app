@@ -1,3 +1,4 @@
+import datetime
 from ecoledirect import EcoleDirect as ED
 from flask import Flask, render_template, request, make_response, redirect, send_file
 import json
@@ -136,6 +137,26 @@ def root():
 @app.route('/home')
 def home():
     return load_dynamic('home.html')
+
+
+@app.route('/work/<day>')
+def get_work_day(day):
+    cookie = request.cookies.get('account')
+    account = json.loads(cookie)
+    day_work_data = school.get_work_date(account['token'], account['id'], day)['data']
+    year, month, day = day_work_data['date'].split('-')
+    date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
+    french_date = date_object.strftime("%A %d %B")
+    day_work_data['frenchDate'] = french_date
+    return day_work_data
+
+
+@app.route('/french/<date>')
+def get_french_day(date):
+    year, month, day = date.split('-')
+    date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
+    french_date = date_object.strftime("%A %d %B")
+    return french_date
 
 
 @app.route('/cgu')
