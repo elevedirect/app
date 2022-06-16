@@ -1,3 +1,4 @@
+import base64
 import datetime
 from ecoledirect.api import *
 import json
@@ -25,8 +26,11 @@ class EcoleDirect:
         elif 'id' in data.keys():
             url = url % str(data['id'])
         response = requests.post(url, data=payload, headers=headers)
-        if response.json()['code'] == 525:
-            return {'expired': True}
+        try:
+            if response.json()['code'] == 525:
+                return {'expired': True}
+        except:
+            pass
         json_response = response.json()
         json_response['expired'] = False
         return json_response
@@ -39,7 +43,6 @@ class EcoleDirect:
             "date": date
         }
         response = self._request(DATE_WORK, data)
-        # print(response)
         return response
 
     def get_notes(self, token, identifiant):
@@ -50,7 +53,8 @@ class EcoleDirect:
                 "id": identifiant
             }
             response = self._request(NOTES, data)
-            if response['expired']:
+            if response['expired'] or response['code'] == 520:
+                response['expired'] = True
                 return response
             notes = response['data']['notes']
             periodes = response['data']['periodes']
@@ -73,18 +77,41 @@ class EcoleDirect:
             response_keys = response['data'].copy().keys()
             formatted_response = []
             for date in response_keys:
+                new_response = self.get_work_date(token, identifiant, date)
                 work = {'homeworks': response['data'][date], 'date': date}
                 year, month, day = date.split('-')
                 date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
                 speaking_date = date_object.strftime("%A %d %B")
                 work['showing_date'] = speaking_date
+                for homework in work['homeworks']:
+                    for detailed_homework in new_response['data']['matieres']:
+                        if detailed_homework.get('aFaire'):
+                            if detailed_homework['aFaire']['idDevoir'] == homework['idDevoir']:
+                                homework['contenu'] = base64.b64decode(detailed_homework["aFaire"]["contenu"]).decode('utf-8')
                 formatted_response.append(work)
-            # print(response)
             return formatted_response
         except Exception as error:
-            print(f'Error while fetching notes: {error.__class__.__name__}')
+            print(f'Error while fetching work: {error.__class__.__name__}')
             return None
             # raise error
+
+    def change_done(self, token, identifiant, id_devoir, effectue):
+        effectue = not effectue
+        if effectue:
+            effectues_devoirs = [int(id_devoir)]
+            non_effectues_devoirs = []
+        else:
+            effectues_devoirs = []
+            non_effectues_devoirs = [int(id_devoir)]
+        data = {
+            "idDevoirsEffectues": effectues_devoirs,
+            "idDevoirsNonEffectues": non_effectues_devoirs,
+            "token": token,
+            "id": identifiant
+        }
+        response = self._request(DONE_WORK, data)
+        if response['expired']:
+            return response
 
     def login(self, username, password):
         try:

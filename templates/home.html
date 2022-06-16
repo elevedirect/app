@@ -143,14 +143,33 @@
           <b>{{date.showing_date}}</b>
         </div>
         {% for homework in date.homeworks %}
-          <div class="column work">
+          <div class="column work" onclick="workPopup('{{homework.idDevoir}}')">
             <article class="message content">
               <span class="centered notification"><code>{{homework.matiere}}</code></span>
               <blockquote class="message-body">
-                Evaluation: <i class="fas fa-poll {{homework.interrogation}}"></i>&nbsp;Effectue: <i class="fas fa-check-square {{homework.effectue}}"></i>
+                Evaluation: <i class="fas fa-poll {{homework.interrogation}}"></i>&nbsp;Effectué: <i class="fas fa-check-square {{homework.effectue}}"></i>
                 <br>
               </blockquote>
             </article>
+          </div>
+          <div class="modal" id="{{homework.idDevoir}}">
+            <div class="modal-background"></div>
+            <div class="modal-content" style="background-color: #fff; padding: .5em">
+              <h1 class="title">Contenu:</h1>
+              <div class="content">
+                <h2>{{homework.matiere}}</h2>
+                {{homework.contenu|safe}}
+                <label class="checkbox" onclick="switchDone(this, '{{homework.idDevoir}}')">
+                  Effectué
+                  <i class="fas fa-check-square {{homework.effectue}}" data="{{homework.effectue}}"></i>
+                </label>
+                <label class="checkbox">
+                  Evaluation
+                  <i class="fas fa-poll {{homework.interrogation}}"></i>
+                </label>
+              </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close" onclick="workPopup('{{homework.idDevoir}}')"></button>
           </div>
         {% endfor %}
       {% endif %}
