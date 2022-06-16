@@ -140,7 +140,6 @@ def load_dynamic(callback):
         notes.append({'data': periode_notes, 'code': periode, 'nom': nom, 'average': final_average})
     work_data = school.get_work(account['token'], account['id'])
     previous_week, next_week = getPreviousAndNextWeek()
-    print(previous_week)
     return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week)
 
 
