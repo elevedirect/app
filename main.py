@@ -21,10 +21,12 @@ def getCurrentWeek():
     return dates
 
 
-def getPreviousAndNextWeek():
-    date = datetime.datetime.now() - datetime.timedelta(days=7)
+def getPreviousAndNextWeek(date=None):
+    if date is None:
+        date = datetime.datetime.now() - datetime.timedelta(days=7)
+    date = date - datetime.timedelta(days=7)
     previous_dates = [(date + datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range(0 - date.weekday(), 7 - date.weekday())]
-    date = datetime.datetime.now() + datetime.timedelta(days=7)
+    date = date + datetime.timedelta(days=14)
     next_dates = [(date + datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range(0 - date.weekday(), 7 - date.weekday())]
     return previous_dates, next_dates
 
@@ -137,8 +139,8 @@ def load_dynamic(callback):
         final_average = round_up(final_average, 2)
         notes.append({'data': periode_notes, 'code': periode, 'nom': nom, 'average': final_average})
     work_data = school.get_work(account['token'], account['id'])
-    # day_work_data = school.get_work_date(account['token'], account['id'], '2022-06-10')
     previous_week, next_week = getPreviousAndNextWeek()
+    print(previous_week)
     return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week)
 
 
@@ -166,12 +168,29 @@ def get_work_day(day):
     return day_work_data
 
 
+@app.route('/get-previous-and-next-week/<date>')
+def get_previous_and_next_week(date):
+    year, month, day = date.split('-')
+    date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
+    previous_week, next_week = getPreviousAndNextWeek(date_object)
+    return {'previous': previous_week, 'next': next_week}
+
+
 @app.route('/french/<date>')
 def get_french_day(date):
     year, month, day = date.split('-')
     date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
     french_date = date_object.strftime("%A %d %B")
     return french_date
+
+
+@app.route('/work/<id_devoir>/<effectue>')
+def change_done(id_devoir, effectue):
+    cookie = request.cookies.get('account')
+    account = json.loads(cookie)
+    effectue = True if effectue == 'true' else False
+    school.change_done(account['token'], account['id'], id_devoir, effectue)
+    return {}
 
 
 @app.route('/cgu')
@@ -206,6 +225,7 @@ def login():
 @app.errorhandler(Exception)
 def error(_error):
     print(_error)
+    # raise _error
     return redirect('/?error=true')
 
 

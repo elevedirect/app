@@ -4,7 +4,7 @@ const homeworksContainer = document.getElementById('homeworks-container')
 const nextWorkButton = document.getElementById('nextwork')
 const previousWorkButton = document.getElementById('previouswork')
 let dataAction, dates, from, to, fromDateObject, fromYear, fromMonth, fromDay, fromDateString, toDateObject, toYear,
-    toMonth, toDay, toDateString, currentDateObject, currentDateString, sampleDate, previousWeek, nextWeek
+    toMonth, toDay, toDateString, currentDateObject, currentDateString, sampleDate, previousWeek, nextWeek, sampleDateString, sampleData
 var frenchDate
 
 Date.prototype.addDays = function (days) {
@@ -47,6 +47,10 @@ function notePopup(element) {
     element.querySelector('.modal').classList.toggle('is-active')
 }
 
+function workPopup(elementId) {
+    document.getElementById(elementId).classList.toggle('is-active')
+}
+
 function expand(periode) {
     document.getElementById(periode).classList.toggle('active')
     document.getElementById(periode + 'icon').classList.toggle('active')
@@ -80,6 +84,15 @@ window.onload = () => {
     }
 }
 
+
+function switchDone(element, id_devoir) {
+    let effectuer = element.children[0].getAttribute('data').toLowerCase()
+    fetch(`/work/${id_devoir}/${effectuer}`)
+    element.children[0].classList.toggle('True')
+    element.children[0].classList.toggle('False')
+}
+
+
 function switchWork(element) {
     homeworksContainer.innerHTML = ''
     dates = element.getAttribute('data-action').split('|')
@@ -110,6 +123,21 @@ function switchWork(element) {
     toDateString = `${toDateObject.getFullYear()}-${toDateObject.getFullMonth()}-${toDateObject.getFullDay()}`
     currentDateObject = fromDateObject
     currentDateString = `${currentDateObject.getFullYear()}-${currentDateObject.getFullMonth()}-${currentDateObject.getFullDay()}`
+    sampleDate = fromDateObject.addDays(1)
+    sampleDateString = `${sampleDate.getFullYear()}-${sampleDate.getFullMonth()}-${sampleDate.getFullDay()}`
+    console.log(sampleDateString, fromDateString)
+    fetch(`/get-previous-and-next-week/${sampleDateString}`)
+        .then(response => { return response.json() })
+        .then(json => {
+            sampleData = json['previous']
+            previousWeek = `${sampleData[0]}|${sampleData[sampleData.length - 1]}`
+            console.log(previousWeek)
+            previousWorkButton.setAttribute('data-action', previousWeek)
+            sampleData = json['next']
+            nextWeek = `${sampleData[0]}|${sampleData[sampleData.length - 1]}`
+            console.log(nextWeek)
+            nextWorkButton.setAttribute('data-action', nextWeek)
+        })
     while (currentDateString !== toDateString) {
         fetch(`/work/${currentDateString}`)
             .then(response => {
@@ -122,8 +150,9 @@ function switchWork(element) {
                   <b>${json['frenchDate']}</b>
                 </div>`
                     json['matieres'].forEach(matiere => {
-                        homeworksContainer.innerHTML += `
-                    <div class="column work">
+                        if (matiere['aFaire'] !== undefined) {
+                            homeworksContainer.innerHTML += `
+                    <div class="column work" onclick="workPopup('${matiere.id}')">
                       <article class="message content">
                         <span class="centered notification"><code>${matiere.matiere}</code></span>
                         <blockquote class="message-body">
@@ -131,19 +160,32 @@ function switchWork(element) {
                           <br>
                         </blockquote>
                       </article>
+                    </div>
+                    <div class="modal" id="${matiere.id}">
+                        <div class="modal-background"></div>
+                        <div class="modal-content" style="background-color: #fff; padding: .5em">
+                          <h1 class="title">Contenu:</h1>
+                          <div class="content">
+                            <h2>${matiere.matiere}</h2>
+                            ${atob(matiere['aFaire']['contenu'])}
+                            <label class="checkbox" onclick="switchDone(this, '${matiere.id}')">
+                              Effectué
+                              <i class="fas fa-check-square ${matiere.aFaire.effectue}" data="${matiere.aFaire.effectue}"></i>
+                            </label>
+                            <label class="checkbox">
+                              Evaluation
+                              <i class="fas fa-poll ${matiere.aFaire.interrogation}"></i>
+                            </label>
+                          </div>
+                        </div>
+                        <button class="modal-close is-large" aria-label="close" onclick="workPopup('${matiere.id}')"></button>
                     </div>`
+                        }
+
                     })
                 }
             })
         currentDateObject = currentDateObject.addDays(1)
         currentDateString = `${currentDateObject.getFullYear()}-${currentDateObject.getFullMonth()}-${currentDateObject.getFullDay()}`
     }
-    sampleDate = toDateObject.addDays(6)
-    nextWeek = `${toDateString}|${sampleDate.getFullYear()}-${sampleDate.getFullMonth()}-${sampleDate.getFullDay()}`
-    sampleDate = fromDateObject.removeDays(6)
-    fromDateObject = fromDateObject.removeDays(1)
-    fromDateString = `${fromDateObject.getFullYear()}-${fromDateObject.getFullMonth()}-${fromDateObject.getFullDay()}`
-    previousWeek = `${sampleDate.getFullYear()}-${sampleDate.getFullMonth()}-${sampleDate.getFullDay()}|${fromDateString}`
-    previousWorkButton.setAttribute('data-action', previousWeek)
-    nextWorkButton.setAttribute('data-action', nextWeek)
 }
