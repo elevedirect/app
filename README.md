@@ -10,6 +10,19 @@ Retrouvez ce projet à [eleve-direct.server.camarm.fr](http://eleve-direct.serve
 
 Connectez-vous à votre compte EcoleDirect et retrouvez vos notes (et vos moyennes !), vos devoirs, votre carte de cantine et plus encore...
 
+## Objectifs
+
+- [x] Se connecter avec son compte EcoleDirect
+- [x] Voir sa carte de cantine
+- [x] Voir ses devoirs
+- [x] Pouvoir cocher effectué sur un devoir
+- [x] Voir ses notes
+- [x] Voir ses moyennes avant la fin du semestre
+- [ ] Pouvoir télécharger sa carte de cantine
+- [ ] Voir son emploi du temps
+- [ ] Voir les actualités
+- [ ] Voir sa photo de profil
+
 ## Précisions:
 
 Aucuns cookies hormis ceux qui permettent l'interaction avec EcoleDirect sont stockés sur votre appareil.
