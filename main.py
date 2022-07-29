@@ -32,7 +32,7 @@ def getPreviousAndNextWeek(date=None):
 
 
 def generateQrcode(data, name):
-    logo = Image.open(f'static/legal/elevedirectqr.png')
+    logo = Image.open(f'static/legal/qr.png')
     basewidth = 50
     wpercent = (basewidth / float(logo.size[0]))
     hsize = int((float(logo.size[1]) * float(wpercent)))
@@ -40,7 +40,7 @@ def generateQrcode(data, name):
     qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H)
     qr.add_data(data)
     qr.make()
-    qrimg = qr.make_image(fill_color="black", back_color="white").convert('RGBA')
+    qrimg = qr.make_image(fill_color="#202236", back_color="#F1F3FF").convert('RGBA')
     pos = ((qrimg.size[0] - logo.size[0]) // 2, (qrimg.size[1] - logo.size[1]) // 2)
     qrimg.paste(logo, pos)
     qrimg.save(f'cache/{name}.png')
@@ -229,4 +229,5 @@ def error(_error):
 
 
 if __name__ == '__main__':
+    generateQrcode('texttxtxt', 'test')
     app.run(port=9090, host='0.0.0.0', debug=True)

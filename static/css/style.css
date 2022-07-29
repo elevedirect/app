@@ -1,6 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Athiti:wght@600;700&display=swap');
+
+:root {
+    --text: #202236;
+    --bg: #F1F3FF;
+    --grey: #E0E2F7;
+    --border: #b9b8b8;
+    --primary: #2F44FF;
+    --active: #6473FF;
+    --secondary: #FFC52F;
+}
 body {
     max-width: 100vw;
     overflow: hidden;
+    color: var(--text) !important;
+    background-color: var(--bg) !important;
+    min-height: 100vh;
+    font-family: "Athiti", sans-serif;
+}
+a {
+    color: var(--primary) !important;
+}
+a:hover {
+    color: var(--active) !important;
 }
 .main {
     display: flex;
@@ -53,7 +74,7 @@ body {
 }
 
 .fas.fa-poll.True, .fas.fa-poll.true {
-    color: hsl(348, 100%, 61%);
+    color: var(--secondary);
 }
 
 .fas.fa-check-square.True, .fas.fa-check-square.true {
@@ -88,11 +109,12 @@ body {
 
 .message-body {
     border: none !important;
+    text-align: center;
 }
 
 .message {
-    border-left: 5px solid #dbdbdb;
-    border-radius: 0px 0px 0px 4px;
+    border-radius: 10px;
+    background-color: var(--grey);
 }
 
 .notification code {
@@ -113,4 +135,23 @@ body {
 
 .table.full td {
     overflow: hidden;
+}
+
+input, select, textarea {
+    background-color: var(--bg) !important;
+    border-color: var(--border) !important;
+}
+
+button, input {
+    border-radius: 10px !important;
+}
+
+.is-link {
+    background-color: var(--primary) !important;
+    color: var(--bg) !important;
+}
+
+.is-link:hover {
+    background-color: var(--active) !important;
+    color: var(--bg) !important;
 }
