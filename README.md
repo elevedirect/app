@@ -10,9 +10,14 @@ Retrouvez ce projet à [eleve-direct.server.camarm.fr](http://eleve-direct.serve
 
 Connectez-vous à votre compte EcoleDirect et retrouvez vos notes (et vos moyennes !), vos devoirs, votre carte de cantine et plus encore...
 
+## Précisions:
+
+Aucuns cookies hormis ceux qui permettent l'interaction avec EcoleDirect sont stockés sur votre appareil.
+
+Les données affichées proviennent directement d'EcoleDirect et les cartes de cantine sont simplement générées à partir de vos identifiants.
 
 ## Aides / mentions légales:
 
-Ce projet est développé par camarm (CAMARM inc.), et propulsé par Labse, qui nous offre l'hébergement et la maintenance du site...
+Ce projet est développé par camarm (CAMARM inc.), et propulsé par Labse, qui nous offre l'hébergement et la maintenance du site.
 
 <img alt="Powered By Labse" src="https://www.camarm.dev/powered-by-labse" title="Labse" width="250"/>
