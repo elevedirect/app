@@ -16,6 +16,22 @@ Aucuns cookies hormis ceux qui permettent l'interaction avec EcoleDirect sont st
 
 Les données affichées proviennent directement d'EcoleDirect et les cartes de cantine sont simplement générées à partir de vos identifiants.
 
+## Auto-hébergement:
+
+Vous pouvez simplement lancer le serveur web et EleveDirect en suivant ces instructions:
+
+1. Prérequis :<br>
+EleveDirect est développé en Python avec Flask ;<br>
+Il vous faudra donc installer python ainsi que les librairies dépendantes :
+```shell
+pip install -r requirements.txt
+```
+2. Lancer le script avec python
+```shell
+python3 main.py
+```
+3. Visiter http://localhost:9090 et voilà !
+
 ## Aides / mentions légales:
 
 Ce projet est développé par camarm (CAMARM inc.), et propulsé par Labse, qui nous offre l'hébergement et la maintenance du site.
