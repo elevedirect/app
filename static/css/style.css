@@ -17,6 +17,9 @@ body {
     min-height: 100vh;
     font-family: "Athiti", sans-serif;
 }
+.button, .input, .textarea {
+    font-family: "Athiti", sans-serif !important;
+}
 a {
     color: var(--primary) !important;
 }
