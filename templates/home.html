@@ -9,7 +9,7 @@
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <p class="title is-4"><i class="fas fa-graduation-cap"></i>&nbsp;{{account.prenom}} {{account.nom}}</p>
+          <p class="title is-4"><i class="far fa-graduation-cap"></i>&nbsp;{{account.prenom}} {{account.nom}}</p>
           <p class="subtitle is-6">élève du <b>{{account.college}}</b> en classe de <b>{{account.classe}}</b></p>
         </div>
       </div>
@@ -32,7 +32,7 @@
 </div>
 <div class="main notes" style="display: none">
   {% for periode in notes %}
-  <h1 class="subtitle" onclick="expand('{{periode.code}}')">{{periode.nom}}&nbsp;<i class="fas fa-angle-down" id="{{periode.code}}icon"></i></h1>
+  <h1 class="subtitle" onclick="expand('{{periode.code}}')">{{periode.nom}}&nbsp;<i class="far fa-angle-down" id="{{periode.code}}icon"></i></h1>
   <div class="note" id="{{periode.code}}">
     <table class="table is-striped full">
       <thead>
@@ -148,7 +148,7 @@
             <article class="message content">
               <span class="centered notification"><code>{{homework.matiere}}</code></span>
               <blockquote class="message-body">
-                Evaluation: <i class="fas fa-poll {{homework.interrogation}}"></i>&nbsp;Effectué: <i class="fas fa-check-square {{homework.effectue}}"></i>
+                Evaluation: <i class="far fa-poll {{homework.interrogation}}"></i>&nbsp;Effectué: <i class="far fa-check-square {{homework.effectue}}"></i>
                 <br>
               </blockquote>
             </article>
@@ -162,11 +162,11 @@
                 {{homework.contenu|safe}}
                 <label class="checkbox" onclick="switchDone(this, '{{homework.idDevoir}}')">
                   Effectué
-                  <i class="fas fa-check-square {{homework.effectue}}" data="{{homework.effectue}}"></i>
+                  <i class="far fa-check-square {{homework.effectue}}" data="{{homework.effectue}}"></i>
                 </label>
                 <label class="checkbox">
                   Evaluation
-                  <i class="fas fa-poll {{homework.interrogation}}"></i>
+                  <i class="far fa-poll {{homework.interrogation}}"></i>
                 </label>
               </div>
             </div>
@@ -179,8 +179,8 @@
   <nav class="pagination" role="navigation" aria-label="pagination">
     <a class="pagination-previous is-current" data-action="{{current_week[0]}}|{{current_week[-1]}}" onclick="switchWork(this)">Semaine Actuelle<span></span></a>
     <ul class="pagination-list">
-      <li><a class="pagination-link" data-action="{{previous_week[0]}}|{{previous_week[-1]}}" onclick="switchWork(this)" id="previouswork"><i class="fas fa-arrow-left"></i>&nbsp;Semaine précédente</a></li>
-      <li><a class="pagination-link" data-action="{{next_week[0]}}|{{next_week[-1]}}" onclick="switchWork(this)" id="nextwork">Semaine suivante&nbsp;<i class="fas fa-arrow-right"></i></a></li>
+      <li><a class="pagination-link" data-action="{{previous_week[0]}}|{{previous_week[-1]}}" onclick="switchWork(this)" id="previouswork"><i class="far fa-arrow-left"></i>&nbsp;Semaine précédente</a></li>
+      <li><a class="pagination-link" data-action="{{next_week[0]}}|{{next_week[-1]}}" onclick="switchWork(this)" id="nextwork">Semaine suivante&nbsp;<i class="far fa-arrow-right"></i></a></li>
     </ul>
   </nav>
 </div>
@@ -213,11 +213,11 @@
     </figure>
     <h1>Installer l'application</h1>
     <p>Vous pouvez télécharger et installer l'application (android)
-      <a href="/static/app/elevedirect.apk" download="/static/app/elevedirect.apk" target="_blank">Ici&nbsp;<i class="fas fa-android"></i></a>
+      <a href="/static/app/elevedirect.apk" download="/static/app/elevedirect.apk" target="_blank">Ici&nbsp;<i class="far fa-android"></i></a>
     </p>
     <h1>Aidez nous</h1>
     <p>Aidez nous à améliorer le projet en envoyant un retour, une idée d'amélioration... ou en partageant cette application
-      <a href="#contact" onclick="share()">Partager&nbsp;<i class="fas fa-share-alt"></i></a>
+      <a href="#contact" onclick="share()">Partager&nbsp;<i class="far fa-share-alt"></i></a>
     </p>
   </div>
 </div>

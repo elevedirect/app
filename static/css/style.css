@@ -158,3 +158,6 @@ button, input {
     background-color: var(--active) !important;
     color: var(--bg) !important;
 }
+.is-warning {
+    color: var(--secondary) !important;
+}
