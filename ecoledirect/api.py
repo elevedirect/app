@@ -14,13 +14,13 @@ class Route:
         return self._args
 
 
-login_args = 'v=4.14.4'
+login_args = 'v=4.17.8'
 LOGIN = Route('login.awp', login_args)
-notes_args = 'verbe=get&v=4.14.4'
+notes_args = 'verbe=get&v=4.17.8'
 NOTES = Route('eleves/%s/notes.awp', notes_args)
-work_args = 'verbe=get&v=4.14.4'
+work_args = 'verbe=get&v=4.17.8'
 WORK = Route('Eleves/%s/cahierdetexte.awp', work_args)
-date_work_args = 'verbe=get&v=4.14.4'
+date_work_args = 'verbe=get&v=4.17.8'
 DATE_WORK = Route('Eleves/%s/cahierdetexte/%s.awp', date_work_args)
 done_work_args = 'verbe=put&v=4.14.5'
 DONE_WORK = Route('Eleves/%s/cahierdetexte.awp', done_work_args)

@@ -98,6 +98,10 @@ def calculateAverage(matieres):
                     sum_average += sous_matiere['average']
             if count != 0:
                 matiere['average'] = round_up(sum_average / count, 2)
+                matiere['empty'] = False
+            else:
+                matiere['average'] = 1
+                matiere['empty'] = True
         else:
             sum_notes = 0
             coefficients_sum = 0
@@ -221,11 +225,11 @@ def login():
     return render_template('login.html', failed='true')
 
 
-@app.errorhandler(Exception)
-def error(_error):
-    print(_error)
-    # raise _error
-    return redirect('/?error=true')
+# @app.errorhandler(Exception)
+# def error(_error):
+#     print(_error)
+#     # raise _error
+#     return redirect('/?error=true')
 
 
 if __name__ == '__main__':

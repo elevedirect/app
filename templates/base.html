@@ -14,7 +14,21 @@
   <title>Eleve Direct - {% block name %}{% endblock%}</title>
 </head>
 <body>
-<nav class="level">
+<nav class="level no-pd">
+  <div class="top-nav">
+    <div class="level is-mobile">
+      <p class="level-item has-text-centered">
+        <img src="/static/legal/logo.png" class="nav-logo">
+      </p>
+      <p class="level-item has-text-centered">
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" id="burger" onclick="toggleNavbar()">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </p>
+    </div>
+  </div>
   <div class="nav-wrapper">
     <p class="level-item has-text-centered">
       <a class="link is-info data-action" href="#home" data-action="home"><i class="far fa-home"></i>&nbsp;Accueil</a>
@@ -29,6 +43,7 @@
       <a class="link is-info data-action" href="#contact" data-action="contact"><i class="far fa-id-card"></i>&nbsp;Contact</a>
     </p>
   </div>
+  <hr>
 </nav>
 {% block content %}
 {% endblock %}

@@ -17,14 +17,17 @@ class EcoleDirect:
     def _request(self, route: Route, data):
         payload = self.format_payload(data)
         url = self.endpoint + route.path + '?' + route.args
-        headers = {}
-
+        headers = {
+            'X-token': '',
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0',
+        }
         if 'token' in data.keys():
             headers['X-token'] = data['token']
         if 'id' in data.keys() and 'date' in data.keys():
             url = url % (str(data['id']), data['date'])
         elif 'id' in data.keys():
             url = url % str(data['id'])
+        requests.options(url)
         response = requests.post(url, data=payload, headers=headers)
         try:
             if response.json()['code'] == 525:
@@ -114,26 +117,27 @@ class EcoleDirect:
             return response
 
     def login(self, username, password):
-        try:
-            data = {
-                "identifiant": username,
-                "motdepasse": password,
-            }
-            response = self._request(LOGIN, data)
-            if response['expired']:
-                return response
-            token = response['token']
-            prenom = response['data']['accounts'][0]['prenom']
-            nom = response['data']['accounts'][0]['nom']
-            photo = response['data']['accounts'][0]['profile']['photo']
-            classe = response['data']['accounts'][0]['profile']['classe']['libelle']
-            etablissement = response['data']['accounts'][0]['nomEtablissement']
-            logo = 'https://api.ecoledirecte.com/v3/telechargement.awp?cToken=MDI1MTA2MlU=&verbe=get&fichierId=' + \
-                   response['data']['accounts'][0]['logoEtablissement'] + '&leTypeDeFichier=IMPORT_FTP'
-            identifiant = response['data']['accounts'][0]['id']
-            return {'token': token, 'nom': nom, 'prenom': prenom, 'photo': photo, 'classe': classe,
-                    'college': etablissement, 'logo': logo, 'id': identifiant}
-        except Exception as error:
-            print(f'Error while login in: {error.__class__.__name__}')
-            return None
+        # try:
+        data = {
+            "identifiant": username,
+            "motdepasse": password,
+        }
+        response = self._request(LOGIN, data)
+        if response['expired']:
+            return response
+        print(response)
+        token = response['token']
+        prenom = response['data']['accounts'][0]['prenom']
+        nom = response['data']['accounts'][0]['nom']
+        photo = response['data']['accounts'][0]['profile']['photo']
+        classe = response['data']['accounts'][0]['profile']['classe']['libelle']
+        etablissement = response['data']['accounts'][0]['nomEtablissement']
+        logo = 'https://api.ecoledirecte.com/v3/telechargement.awp?cToken=MDI1MTA2MlU=&verbe=get&fichierId=' + \
+               response['data']['accounts'][0]['logoEtablissement'] + '&leTypeDeFichier=IMPORT_FTP'
+        identifiant = response['data']['accounts'][0]['id']
+        return {'token': token, 'nom': nom, 'prenom': prenom, 'photo': photo, 'classe': classe,
+                'college': etablissement, 'logo': logo, 'id': identifiant}
+        # except Exception as error:
+        #     print(f'Error while login in: {error.__class__.__name__}')
+        #     return None
             # raise error

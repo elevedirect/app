@@ -24,7 +24,7 @@
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <p class="subtitle is-5">Votre carte de cantine (Sacré Coeur Vercel)</p>
+          <p class="subtitle is-5">Votre carte de cantine (Sacré Cœur Vercel) (<a href="/cantine-qr" download="/cantine-qr">Télécharger&nbsp;<i class="fal fa-save"></i></a>)</p>
         </div>
       </div>
     </div>
@@ -134,7 +134,11 @@
 <div class="main homework" style="display: none">
   <div class="columns">
     <div class="column is-full" style="text-align: center" id="worksdates">
+      {% if work|length > 0 %}
       <b>{{work[0].showing_date}} - {{work[-1].showing_date}}</b>
+      {% else %}
+      <b>Rien à afficher</b>
+      {% endif %}
     </div>
   </div>
   <div class="columns" id="homeworks-container">
@@ -179,8 +183,8 @@
   <nav class="pagination" role="navigation" aria-label="pagination">
     <a class="pagination-previous is-current" data-action="{{current_week[0]}}|{{current_week[-1]}}" onclick="switchWork(this)">Semaine Actuelle<span></span></a>
     <ul class="pagination-list">
-      <li><a class="pagination-link" data-action="{{previous_week[0]}}|{{previous_week[-1]}}" onclick="switchWork(this)" id="previouswork"><i class="far fa-arrow-left"></i>&nbsp;Semaine précédente</a></li>
-      <li><a class="pagination-link" data-action="{{next_week[0]}}|{{next_week[-1]}}" onclick="switchWork(this)" id="nextwork">Semaine suivante&nbsp;<i class="far fa-arrow-right"></i></a></li>
+      <li><a class="pagination-link" data-action="{{previous_week[0]}}|{{previous_week[-1]}}" onclick="switchWork(this)" id="previouswork"><i class="far fa-arrow-alt-from-right"></i>&nbsp;Semaine précédente</a></li>
+      <li><a class="pagination-link" data-action="{{next_week[0]}}|{{next_week[-1]}}" onclick="switchWork(this)" id="nextwork">Semaine suivante&nbsp;<i class="far fa-arrow-alt-from-left"></i></a></li>
     </ul>
   </nav>
 </div>
@@ -203,17 +207,17 @@
       <li>Bulma: <b><a href="https://bulma.io">https://bulma.io</a></b></li>
       <li>Python: <b><a href="https://python.org">https://python.org</a></b></li>
     </ul>
-    <p>Les logos <b>Eleve Direct</b> sont inspirés des logos EcoleDirect:</p>
+    <p>Les logos <b>Eleve Direct</b> sont sous license <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/fr/" target="_blank">CC BY-NC-ND 3.0 FR</a> :</p>
     <figure>
-      <img src="/static/legal/elevedirectbleue.png">
-      <img src="/static/legal/logoEcoleDirecte.png">
+      <img src="/static/legal/icon.png">
+      <img src="/static/legal/logo.png">
       <figcaption>
-        Eleve Direct logo, EcoleDirect logo
+        Eleve Direct icon, EleveDirect logo
       </figcaption>
     </figure>
     <h1>Installer l'application</h1>
     <p>Vous pouvez télécharger et installer l'application (android)
-      <a href="/static/app/elevedirect.apk" download="/static/app/elevedirect.apk" target="_blank">Ici&nbsp;<i class="far fa-android"></i></a>
+      <a href="/static/app/elevedirect.apk" download="/static/app/elevedirect.apk" target="_blank">Ici&nbsp;<i class="fab fa-android"></i></a>
     </p>
     <h1>Aidez nous</h1>
     <p>Aidez nous à améliorer le projet en envoyant un retour, une idée d'amélioration... ou en partageant cette application
