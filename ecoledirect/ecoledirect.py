@@ -116,6 +116,73 @@ class EcoleDirect:
         if response['expired']:
             return response
 
+    @staticmethod
+    def hour_is_before_reference(hour, reference):
+        hour_hour, hour_minute = hour.split(':')
+        reference_hour, reference_minute = reference.split(':')
+        if int(hour_hour) < int(reference_hour):
+            return True
+        elif int(hour_hour) == int(reference_hour) and int(hour_minute) < int(reference_minute):
+            return True
+        return False
+
+    def order_classes(self, classes, next_hour, next_hour_minute, index=0, new_classes={}):
+        current_index = index
+        closer = {"start": f"0000-00-00 23:59", "end": f"0000-00-00 23:59"}
+        if current_index > len(classes):
+            return new_classes
+        for classe in classes:
+            classe_hour, classe_hour_minute = classe['start'].split(' ')[-1].split(':')
+            if int(classe_hour) > int(next_hour):
+                if self.hour_is_before_reference(f"{classe_hour}:{classe_hour_minute}", closer['start'].split(' ')[-1]):
+                    closer = classe
+            elif int(classe_hour) == int(next_hour) and int(classe_hour_minute) > int(next_hour_minute):
+                if self.hour_is_before_reference(f"{classe_hour}:{classe_hour_minute}", closer['start'].split(' ')[-1]):
+                    closer = classe
+        new_classes[str(current_index)] = closer
+        next_hour, next_hour_minute = closer['end'].split(' ')[-1].split(':')
+        return self.order_classes(classes, next_hour, next_hour_minute, current_index + 1, new_classes)
+
+    def get_timing(self, token, identifiant, start, end):
+        data = {
+            "dateDebut": start,
+            "dateFin": end,
+            "avecTrous": False,
+            "token": token,
+            "id": identifiant
+        }
+
+        response = self._request(TIMING, data)
+        timing = {'empty': False, 'classes': []}
+        if len(response['data']) == 0:
+            timing['empty'] = True
+        formatted_classe = {}
+        for classe in response['data']:
+            formatted_classe['name'] = classe['text']
+            formatted_classe['matiere'] = classe['matiere']
+            formatted_classe['salle'] = classe['salle']
+            formatted_classe['prof'] = classe['prof']
+            formatted_classe['color'] = classe['color']
+            formatted_classe['contenuseance'] = classe['contenuDeSeance']
+            formatted_classe['devoirs'] = classe['devoirAFaire']
+            formatted_classe['start'] = classe['start_date']
+            formatted_classe['end'] = classe['end_date']
+            timing['classes'].append(formatted_classe)
+            formatted_classe = {}
+        next_hour, next_hour_minute = '23:59'.split(':')
+        first_class = {}
+        for classe in timing['classes']:
+            classe_hour, classe_hour_minute = classe['start'].split(' ')[-1].split(':')
+            if int(classe_hour) < int(next_hour):
+                next_hour, next_hour_minute = classe_hour, classe_hour_minute
+                first_class = classe
+            elif int(classe_hour) == int(next_hour) and int(classe_hour_minute) < int(next_hour_minute):
+                next_hour, next_hour_minute = classe_hour, classe_hour_minute
+                first_class = classe
+        timing['classes'] = self.order_classes(timing['classes'], next_hour, next_hour_minute, 1)
+        timing['classes']['0'] = first_class
+        return timing
+
     def login(self, username, password):
         try:
             data = {
@@ -125,7 +192,6 @@ class EcoleDirect:
             response = self._request(LOGIN, data)
             if response['expired']:
                 return response
-            print(response)
             token = response['token']
             prenom = response['data']['accounts'][0]['prenom']
             nom = response['data']['accounts'][0]['nom']

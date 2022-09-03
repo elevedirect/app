@@ -44,8 +44,24 @@ a:hover {
     padding: 1em;
 }
 
-.card.qr .card-image figure {
-    border-radius: 5px;
+.card, .box {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 8px;
+}
+
+.content.center {
+    width: 100%;
+    text-align: center;
+}
+
+.box.timing {
+    width: 80%;
+}
+
+.card.qr .card-image figure img {
+    border-radius: 15px;
 }
 
 .note {
@@ -71,9 +87,13 @@ a:hover {
 }
 
 .nav-wrapper.active {
-    height: 8em;
+    height: 11em;
     margin-top: 1em;
     opacity: 1;
+}
+
+.nav-wrapper svg.svg-inline--fa {
+    width: 1.5em;
 }
 
 .nav-logo {
@@ -146,19 +166,20 @@ hr {
     padding-top: .5rem;
 }
 
-.fas.fa-angle-down {
+.fa-angle-down {
     transition: .5s ease-in-out;
+    transform: translateY(2.5px) rotate(0deg);
 }
 
-.fas.fa-angle-down.active {
-    rotate: -90deg;
+.fa-angle-down.active {
+    transform: translateY(2.5px) rotate(-90deg);
 }
 
-.fas.fa-poll.True, .fas.fa-poll.true {
+.fa-poll.True, .fa-poll.true {
     color: var(--secondary);
 }
 
-.fas.fa-check-square.True, .fas.fa-check-square.true {
+.fa-check-square.True, .fa-check-square.true {
     color: hsl(141, 71%, 48%);
 }
 

@@ -32,7 +32,7 @@
 </div>
 <div class="main notes" style="display: none">
   {% for periode in notes %}
-  <h1 class="subtitle" onclick="expand('{{periode.code}}')">{{periode.nom}}&nbsp;<i class="far fa-angle-down" id="{{periode.code}}icon"></i></h1>
+  <h1 class="subtitle" onclick="expand('{{periode.code}}')">{{periode.nom}}&nbsp;<i class="fas fa-angle-down" id="{{periode.code}}icon"></i></h1>
   <div class="note" id="{{periode.code}}">
     <table class="table is-striped full">
       <thead>
@@ -187,6 +187,80 @@
       <li><a class="pagination-link" data-action="{{next_week[0]}}|{{next_week[-1]}}" onclick="switchWork(this)" id="nextwork">Semaine suivante&nbsp;<i class="far fa-arrow-alt-from-left"></i></a></li>
     </ul>
   </nav>
+</div>
+<div class="main timing" style="display: none">
+  <div class="calendar">
+    {% if timing.empty %}
+    <div class="content center">
+      <h1 class="title is-3">Rien pour aujourd'hui, bon repos !</h1>
+    </div>
+    {% else %}
+    <div class="content center">
+      <b class="title is-4">Emploi du temps du {{timing.date}}:</b>
+    </div>
+      {% for i in range(0, timing.classes|length) %}
+        {% if not timing.classes.get(i|string).start == '0000-00-00 23:59' %}
+          <div class="box timing" style="--current: {{timing.classes.get(i|string).color}}; background-color: var(--current);">
+            <h1 class="title is-4">{{timing.classes.get(i|string).name}}</h1>
+            <h5 class="subtitle is-6">
+              Matière: {{timing.classes.get(i|string).matiere}}<br>
+              De: {{timing.classes.get(i|string).start.split(' ')[-1]}}<br>
+              A: {{timing.classes.get(i|string).end.split(' ')[-1]}}
+            </h5>
+            <p>
+              Salle: {{timing.classes.get(i|string).salle}}
+            </p>
+            {% if timing.classes.get(i|string).devoirs %}
+            Devoirs donnés pour ce cours !&nbsp;<i class="far fa-exclamation-triangle is-danger"></i>
+            {% else %}
+              Aucuns devoirs <i class="far fa-laptop-house {{timing.classes.get(i|string).devoirs}}"></i>&nbsp;
+            {% endif %}
+            {% if timing.classes.get(i|string).contenuseance %}
+            Ce cours à un contenu de séance !&nbsp;<i class="far fa-exclamation-triangle is-danger"></i>
+            {% else %}
+            Pas de contenu de séance <i class="far fa-th-list {{timing.classes.get(i|string).contenuseance}}"></i>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    <br>
+    <br>
+    {% if timing_tomorrow.empty %}
+    <div class="content center">
+      <h1 class="title is-3">Rien pour demain, pensez à réviser vos cours !</h1>
+    </div>
+    {% else %}
+    <div class="content center">
+      <b class="title is-4">Emploi du temps de demain (du {{timing_tomorrow.date}}):</b>
+    </div>
+      {% for i in range(0, timing_tomorrow.classes|length) %}
+        {% if not timing_tomorrow.classes.get(i|string).start == '0000-00-00 23:59' %}
+          <div class="box timing" style="--current: {{timing_tomorrow.classes.get(i|string).color}}; background-color: var(--current);">
+            <h1 class="title is-4">{{timing_tomorrow.classes.get(i|string).name}}</h1>
+            <h5 class="subtitle is-6">
+              Matière: {{timing_tomorrow.classes.get(i|string).matiere}}<br>
+              De: {{timing_tomorrow.classes.get(i|string).start.split(' ')[-1]}}<br>
+              A: {{timing_tomorrow.classes.get(i|string).end.split(' ')[-1]}}
+            </h5>
+            <p>
+              Salle: {{timing_tomorrow.classes.get(i|string).salle}}
+            </p>
+            {% if timing_tomorrow.classes.get(i|string).devoirs %}
+            Devoirs donnés pour ce cours !&nbsp;<i class="far fa-exclamation-triangle is-danger"></i>
+            {% else %}
+              Aucuns devoirs <i class="far fa-laptop-house {{timing_tomorrow.classes.get(i|string).devoirs}}"></i>&nbsp;
+            {% endif %}
+            {% if timing_tomorrow.classes.get(i|string).contenuseance %}
+            Ce cours à un contenu de séance !&nbsp;<i class="far fa-exclamation-triangle is-danger"></i>
+            {% else %}
+            Pas de contenu de séance <i class="far fa-th-list {{timing_tomorrow.classes.get(i|string).contenuseance}}"></i>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
 </div>
 <div class="main contact" style="display: none">
   <div class="content" style="padding: 1em">

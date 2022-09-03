@@ -22,5 +22,7 @@ work_args = 'verbe=get&v=4.17.8'
 WORK = Route('Eleves/%s/cahierdetexte.awp', work_args)
 date_work_args = 'verbe=get&v=4.17.8'
 DATE_WORK = Route('Eleves/%s/cahierdetexte/%s.awp', date_work_args)
-done_work_args = 'verbe=put&v=4.14.5'
+done_work_args = 'verbe=put&v=4.17.8'
 DONE_WORK = Route('Eleves/%s/cahierdetexte.awp', done_work_args)
+timing_args = 'verbe=get&v=4.17.8'
+TIMING = Route('E/%s/emploidutemps.awp', timing_args)

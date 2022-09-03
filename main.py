@@ -31,6 +31,22 @@ def getPreviousAndNextWeek(date=None):
     return previous_dates, next_dates
 
 
+def getCurrentDay():
+    now = datetime.datetime.now()
+    year, month, day = now.year, now.month, now.day
+    date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
+    french_date = date_object.strftime("%A %d %B")
+    return now.strftime("%Y-%m-%d"), french_date
+
+
+def getTomorrowDay():
+    now = datetime.datetime.now() + datetime.timedelta(days=1)
+    year, month, day = now.year, now.month, now.day
+    date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
+    french_date = date_object.strftime("%A %d %B")
+    return now.strftime("%Y-%m-%d"), french_date
+
+
 def generateQrcode(data, name):
     logo = Image.open(f'static/legal/qr.png')
     basewidth = 50
@@ -144,7 +160,13 @@ def load_dynamic(callback):
         notes.append({'data': periode_notes, 'code': periode, 'nom': nom, 'average': final_average})
     work_data = school.get_work(account['token'], account['id'])
     previous_week, next_week = getPreviousAndNextWeek()
-    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week)
+    today, french_today = getCurrentDay()
+    timing = school.get_timing(account['token'], account['id'], today, today)
+    timing['date'] = french_today
+    tomorrow, french_tomorrow = getTomorrowDay()
+    timing_tomorrow = school.get_timing(account['token'], account['id'], tomorrow, tomorrow)
+    timing_tomorrow['date'] = french_tomorrow
+    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week, timing=timing, timing_tomorrow=timing_tomorrow)
 
 
 @app.route('/')
