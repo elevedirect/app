@@ -18,8 +18,8 @@ Connectez-vous à votre compte EcoleDirect et retrouvez vos notes (et vos moyenn
 - [x] Pouvoir cocher effectué sur un devoir
 - [x] Voir ses notes
 - [x] Voir ses moyennes avant la fin du semestre
+- [x] Voir son emploi du temps
 - [ ] Pouvoir télécharger sa carte de cantine
-- [ ] Voir son emploi du temps
 - [ ] Voir les actualités
 - [ ] Voir sa photo de profil
 
