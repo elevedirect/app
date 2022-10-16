@@ -272,4 +272,4 @@ def error(_error):
 
 if __name__ == '__main__':
     generateQrcode('texttxtxt', 'test')
-    app.run(port=9090, host='0.0.0.0', debug=True, ssl_context=('certs/elevedirect_cert.pem', 'certs/elevedirect_key.pem'))
+    app.run(port=9090, host='0.0.0.0', debug=True) # ssl_context=('certs/elevedirect_cert.pem', 'certs/elevedirect_key.pem')
