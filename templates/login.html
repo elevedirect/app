@@ -22,7 +22,7 @@
   <p>Connectez vous avec votre compte Ecoledirect:</p>
 </div>
 <div class="form">
-  <form action="/login" method="post">
+  <form action="/login" method="post" onsubmit="return load(this.querySelector('#connect-button'))">
     <div class="field">
       <label class="label">Identifiant</label>
       <div class="control has-icons-right">
@@ -47,7 +47,7 @@
     </div>
     <div class="field">
       <div class="control">
-        <button class="button is-link">Se connecter&nbsp;<i class="far fa-paper-plane"></i></button>
+        <button class="button is-link" id="connect-button">Se connecter&nbsp;<i class="far fa-paper-plane"></i><i class="fad fa-spinner-third fa-spin" style="display: none"></i></button>
       </div>
     </div>
     <div class="field">
@@ -88,5 +88,12 @@
         display: block !important;
     }
 </style>
+<script>
+  function load(button) {
+      button.querySelector('svg').setAttribute('class', 'fad fa-spinner-third fa-spin')
+      button.disabled = 'true'
+      return true
+  }
+</script>
 </body>
 </html>
