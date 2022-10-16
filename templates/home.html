@@ -10,7 +10,10 @@
       <div class="media">
         <div class="media-content">
           <p class="title is-4"><i class="far fa-graduation-cap"></i>&nbsp;{{account.prenom}} {{account.nom}}</p>
-          <p class="subtitle is-6">élève du <b>{{account.college}}</b> en classe de <b>{{account.classe}}</b></p>
+          <p class="subtitle is-6">
+            élève du <b>{{account.college}}</b> en classe de <b>{{account.classe}}</b><br><br>
+            <button class="button is-small is-danger" onclick="logout()">Déconnexion&nbsp;<i class="fad fa-sign-out-alt"></i></button>
+          </p>
         </div>
       </div>
     </div>

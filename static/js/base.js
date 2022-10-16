@@ -70,7 +70,8 @@ function toggleNavbar() {
 }
 
 function logout() {
-    document.cookie = ''
+    document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+    location.href = '/'
 }
 
 window.onload = () => {
@@ -198,3 +199,4 @@ function switchWork(element) {
         currentDateString = `${currentDateObject.getFullYear()}-${currentDateObject.getFullMonth()}-${currentDateObject.getFullDay()}`
     }
 }
+
