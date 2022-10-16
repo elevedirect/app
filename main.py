@@ -172,6 +172,17 @@ def load_dynamic(callback):
 @app.route('/')
 def root():
     expired = request.args.get('expired')
+    if expired == 'true':
+        login_informations = request.cookies.get('stay_connected')
+        if login_informations:
+            login_informations = json.loads(login_informations)
+            username = login_informations['username']
+            password = login_informations['password']
+            credentials = school.login(username, password)
+            if credentials:
+                response = make_response(redirect('/home'))
+                response.set_cookie('account', json.dumps(credentials))
+                return response
     error = request.args.get('error')
     return render_template('login.html', expired=expired, error=error)
 
@@ -239,9 +250,14 @@ def qr():
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
+    stay_connected = request.form.get('stay')
     credentials = school.login(username, password)
     if credentials:
         response = make_response(redirect('/home'))
+        if stay_connected is not None:
+            if stay_connected == 'on':
+                account_informations = {"username": username, "password": password}
+                response.set_cookie('stay_connected', json.dumps(account_informations))
         response.set_cookie('account', json.dumps(credentials))
         return response
     return render_template('login.html', failed='true')

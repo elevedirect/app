@@ -50,6 +50,22 @@
         <button class="button is-link">Se connecter&nbsp;<i class="far fa-paper-plane"></i></button>
       </div>
     </div>
+    <div class="field">
+    <div class="control">
+      <div class="label">
+        Rester connecter: <input type="checkbox" name="stay" >
+      </div>
+      <div class="help is-danger always">
+        Cette option est déconseillée... <a href="#morestayconnected">plus</a> <br><br><br><br>
+        <div id="morestayconnected">
+          Cette option est déconseillée, car elle consiste à stocker vos identifiants (nom d'utilisateur et mot de passe)
+          dans un cookie, si une personne accède à votre navigateur, elle peut potentiellement obtenir ces codes et se
+          connecter à votre compte
+        </div>
+      </div>
+
+    </div>
+  </div>
   </form>
 </div>
 <style>
@@ -68,6 +84,9 @@
         display: none;
     }
     {% endif %}
+    .always {
+        display: block !important;
+    }
 </style>
 </body>
 </html>
