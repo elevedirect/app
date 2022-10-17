@@ -176,7 +176,7 @@ hr {
 }
 
 .fa-poll.True, .fa-poll.true {
-    color: var(--secondary);
+    color: #FFBA06;
 }
 
 .fa-check-square.True, .fa-check-square.true {
@@ -207,11 +207,13 @@ hr {
 
 .notification {
     margin-bottom: 0;
+    background-color: var(--grey) !important;
 }
 
 .message-body {
     border: none !important;
     text-align: center;
+    background-color: var(--grey) !important;
 }
 
 .message {
@@ -220,7 +222,7 @@ hr {
 }
 
 .notification code {
-    background-color: hsl(0, 0%, 86%);
+    background-color: #C9CEFD;
     border-radius: .375em;
     color: hsl(0, 0%, 29%);
 }
