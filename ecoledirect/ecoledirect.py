@@ -75,14 +75,18 @@ class EcoleDirect:
             return None
             # raise error
 
-    def get_document(self, document, token):
+    def get_document(self, document, token, do_not_translate_name=False):
         data = {
             "forceDownload": 0,
             "token": token
         }
         doc_id = document['id']
         doc_type = document['type']
-        doc_name = document['libelle']
+        print(document['libelle'])
+        if not do_not_translate_name:
+            doc_name = document['libelle'].encode('latin-1').decode('utf-8')
+        else:
+            doc_name = document['libelle']
         new_doc_route = DOCUMENTS
         args = new_doc_route.args
         args = args % (doc_id, doc_type)

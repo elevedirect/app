@@ -233,7 +233,7 @@ def change_done(id_devoir, effectue):
 def download_file(fid, ftype, fname):
     cookie = request.cookies.get('account')
     account = json.loads(cookie)
-    doc = school.get_document({"id": fid, "libelle": fname, "type": ftype}, account['token'])
+    doc = school.get_document({"id": fid, "libelle": fname, "type": ftype}, account['token'], True)
     if type(doc['content']) not in (bytes, bytearray):
         open(f"cache/{doc['name']}", "w").write(doc['content'])
     else:
