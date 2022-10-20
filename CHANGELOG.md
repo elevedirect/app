@@ -1,4 +1,4 @@
-Application mobile moins de reconnexions et emplois du temps
+Rester connecté & fichiers associés aux devoirs
 ---
-Nous avons amélioré la connexion sur l'application mobile, vous n'aurez pas à vous reconnecter à chaque lancement ! 
-Nous avons aussi développé une toute nouvelle navigation et une page pour les emplois du temps...
+Une option pour rester connecté à son compte a été ajoutée et les fichiers associés aux devoirs sont maintenant visibles.
+Attention il est impossible de télécharger des fichiers depuis l'application mobile, la prochaine release devrait y remédier...
