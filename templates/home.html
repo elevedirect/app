@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block name %}Accueil{% endblock %}
-
 {% block content %}
 <link rel="stylesheet" href="/static/css/style.css">
 <div class="main home">
@@ -167,6 +166,14 @@
               <div class="content">
                 <h2>{{homework.matiere}}</h2>
                 {{homework.contenu|safe}}
+                {% if homework.has_documents %}
+                  <h3>Documents:</h3>
+                  {% for doc in homework.documents %}
+                    <span class="tag is-normal is-a-link"><a target="_blank" href="{{doc.url}}" download="{{doc.name}}">{{doc.name}}</a></span>
+                  {% endfor %}
+                {% endif %}
+                <br>
+                <br>
                 <label class="checkbox" onclick="switchDone(this, '{{homework.idDevoir}}')">
                   Effectué
                   <i class="far fa-check-square {{homework.effectue}}" data="{{homework.effectue}}"></i>

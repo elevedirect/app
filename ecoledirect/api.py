@@ -26,3 +26,5 @@ done_work_args = 'verbe=put&v=4.17.8'
 DONE_WORK = Route('Eleves/%s/cahierdetexte.awp', done_work_args)
 timing_args = 'verbe=get&v=4.17.8'
 TIMING = Route('E/%s/emploidutemps.awp', timing_args)
+documents_args = 'verbe=get&v=4.22.0&fichierId=%s&leTypeDeFichier=%s'
+DOCUMENTS = Route('telechargement.awp', documents_args)

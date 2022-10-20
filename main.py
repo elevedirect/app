@@ -229,6 +229,18 @@ def change_done(id_devoir, effectue):
     return {}
 
 
+@app.route('/file/<fid>/<ftype>/<fname>')
+def download_file(fid, ftype, fname):
+    cookie = request.cookies.get('account')
+    account = json.loads(cookie)
+    doc = school.get_document({"id": fid, "libelle": fname, "type": ftype}, account['token'])
+    if type(doc['content']) not in (bytes, bytearray):
+        open(f"cache/{doc['name']}", "w").write(doc['content'])
+    else:
+        open(f"cache/{doc['name']}", "wb").write(doc['content'])
+    return send_file(f"cache/{doc['name']}")
+
+
 @app.route('/cgu')
 def cgu():
     return markdown.markdown(open('static/legal/CGU.md').read())
@@ -265,9 +277,9 @@ def login():
 
 @app.errorhandler(Exception)
 def error(_error):
-    print(_error)
-    # raise _error
-    return redirect('/?error=true')
+    # print(_error)
+    raise _error
+    # return redirect('/?error=true')
 
 
 if __name__ == '__main__':

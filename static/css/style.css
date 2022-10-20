@@ -227,6 +227,10 @@ hr {
     color: hsl(0, 0%, 29%);
 }
 
+.tag.is-a-link a:hover {
+    text-decoration: var(--text);
+}
+
 .table.full {
     max-width: 100vw !important;
     min-width: 100vw !important;

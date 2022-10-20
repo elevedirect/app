@@ -1,5 +1,7 @@
 import base64
 import datetime
+import urllib
+
 from ecoledirect.api import *
 import json
 import requests
@@ -14,9 +16,13 @@ class EcoleDirect:
     def format_payload(data):
         return {"data": json.dumps(data)}
 
-    def _request(self, route: Route, data):
+    def _request(self, route: Route, data, special_args=None, plain=False):
+        if special_args:
+            args = special_args
+        else:
+            args = route.args
         payload = self.format_payload(data)
-        url = self.endpoint + route.path + '?' + route.args
+        url = self.endpoint + route.path + '?' + args
         headers = {
             'X-token': '',
             'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0',
@@ -34,9 +40,11 @@ class EcoleDirect:
                 return {'expired': True}
         except:
             pass
-        json_response = response.json()
-        json_response['expired'] = False
-        return json_response
+        if not plain:
+            json_response = response.json()
+            json_response['expired'] = False
+            return json_response
+        return response.content
 
     def get_work_date(self, token, identifiant, date):
         data = {
@@ -67,6 +75,24 @@ class EcoleDirect:
             return None
             # raise error
 
+    def get_document(self, document, token):
+        data = {
+            "forceDownload": 0,
+            "token": token
+        }
+        doc_id = document['id']
+        doc_type = document['type']
+        doc_name = document['libelle']
+        new_doc_route = DOCUMENTS
+        args = new_doc_route.args
+        args = args % (doc_id, doc_type)
+        doc_content = self._request(DOCUMENTS, data, args, True)
+        encoded_id = urllib.parse.quote(str(doc_id).encode())
+        encoded_type = urllib.parse.quote(doc_type.encode())
+        encoded_name = urllib.parse.quote(doc_name.encode())
+        url = f"/file/{encoded_id}/{encoded_type}/{encoded_name}"
+        return {"content": doc_content, "name": doc_name, "url": url, "id": doc_id}
+
     def get_work(self, token, identifiant):
         try:
             data = {
@@ -91,12 +117,21 @@ class EcoleDirect:
                         if detailed_homework.get('aFaire'):
                             if detailed_homework['aFaire']['idDevoir'] == homework['idDevoir']:
                                 homework['contenu'] = base64.b64decode(detailed_homework["aFaire"]["contenu"]).decode('utf-8')
+                            if len(detailed_homework['aFaire']['documents']) > 0:
+                                homework['has_documents'] = True
+                                documents = []
+                                for doc in detailed_homework['aFaire']['documents']:
+                                    documents.append(self.get_document(doc, token))
+                                homework['documents'] = documents
+                            if len(detailed_homework['aFaire']['documents']) == 0:
+                                homework['documents'] = []
+                                homework['has_documents'] = False
                 formatted_response.append(work)
             return formatted_response
         except Exception as error:
-            print(f'Error while fetching work: {error.__class__.__name__}')
-            return None
-            # raise error
+            # print(f'Error while fetching work: {error.__class__.__name__}')
+            # return None
+            raise error
 
     def change_done(self, token, identifiant, id_devoir, effectue):
         effectue = not effectue
