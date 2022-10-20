@@ -82,7 +82,6 @@ class EcoleDirect:
         }
         doc_id = document['id']
         doc_type = document['type']
-        print(document['libelle'])
         if not do_not_translate_name:
             doc_name = document['libelle'].encode('latin-1').decode('utf-8')
         else:
