@@ -7,10 +7,14 @@ import math
 import markdown
 import locale
 from PIL import Image
+import conf as cf
 
 
 locale.setlocale(locale.LC_ALL, "fr_FR.UTF-8")
 
+conf = cf.asdict()
+mobile_version = conf['App']['mobile_app_version']
+web_version = conf['App']['website_version']
 app = Flask('Eleve Direct')
 school = ED()
 
@@ -166,7 +170,7 @@ def load_dynamic(callback):
     tomorrow, french_tomorrow = getTomorrowDay()
     timing_tomorrow = school.get_timing(account['token'], account['id'], tomorrow, tomorrow)
     timing_tomorrow['date'] = french_tomorrow
-    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week, timing=timing, timing_tomorrow=timing_tomorrow)
+    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week, timing=timing, timing_tomorrow=timing_tomorrow, mversion=mobile_version, wversion=web_version)
 
 
 @app.route('/')
@@ -246,7 +250,7 @@ def cgu():
     return markdown.markdown(open('static/legal/CGU.md').read())
 
 
-@app.route('/cantine-qr')
+@app.route('/cantine-qr.png')
 def qr():
     cookie = request.cookies.get('account')
     account = json.loads(cookie)
