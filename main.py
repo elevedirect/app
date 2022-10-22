@@ -277,9 +277,9 @@ def login():
 
 @app.errorhandler(Exception)
 def error(_error):
-    # print(_error)
-    raise _error
-    # return redirect('/?error=true')
+    print(_error)
+    # raise _error
+    return redirect('/?error=true')
 
 
 if __name__ == '__main__':
