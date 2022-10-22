@@ -159,7 +159,10 @@ def load_dynamic(callback):
         populated_matieres = getNotes(parseNotes(notes_data['notes']), matieres, periode)
         periode_notes = calculateAverage(populated_matieres)
         all_average = [matiere['average'] for matiere in periode_notes if matiere['average']]
-        final_average = sum(all_average) / len(all_average)
+        if not len(all_average) == 0:
+            final_average = sum(all_average) / len(all_average)
+        else:
+            final_average = 0
         final_average = round_up(final_average, 2)
         notes.append({'data': periode_notes, 'code': periode, 'nom': nom, 'average': final_average})
     work_data = school.get_work(account['token'], account['id'])
@@ -282,8 +285,8 @@ def login():
 @app.errorhandler(Exception)
 def error(_error):
     print(_error)
-    # raise _error
-    return redirect('/?error=true')
+    raise _error
+    # return redirect('/?error=true')
 
 
 if __name__ == '__main__':

@@ -244,3 +244,4 @@ class EcoleDirect:
         except Exception as error:
             print(f'Error while login in: {error.__class__.__name__}')
             return None
+            # raise error
