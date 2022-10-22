@@ -41,7 +41,7 @@ pip install -r requirements.txt
 ```
 2. Lancer le script avec python
 ```shell
-python3 main.py
+python3 main.py --config config.ini
 ```
 3. Visiter http://localhost:9090 et voilà !
 
