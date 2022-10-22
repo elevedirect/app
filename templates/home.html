@@ -26,7 +26,7 @@
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <p class="subtitle is-5">Votre carte de cantine (Sacré Cœur Vercel) (<a href="/cantine-qr" download="/cantine-qr">Télécharger&nbsp;<i class="fal fa-save"></i></a>)</p>
+          <p class="subtitle is-5">Votre carte de cantine (Sacré Cœur Vercel) (<a href="/cantine-qr" download="carte_cantine.png">Télécharger&nbsp;<i class="fal fa-save"></i></a>)</p>
         </div>
       </div>
     </div>
@@ -169,7 +169,7 @@
                 {% if homework.has_documents %}
                   <h3>Documents:</h3>
                   {% for doc in homework.documents %}
-                    <span class="tag is-normal is-a-link"><a target="_blank" href="{{doc.url}}" download="{{doc.name}}">{{doc.name}}</a></span>
+                    <span class="tag is-normal is-a-link"><a href="{{doc.url}}" download="{{doc.name}}">{{doc.name}}</a></span>
                   {% endfor %}
                 {% endif %}
                 <br>
