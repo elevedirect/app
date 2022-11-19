@@ -14,7 +14,7 @@ class Route:
         return self._args
 
 
-login_args = 'v=4.17.8'
+login_args = 'v=4.24.0'
 LOGIN = Route('login.awp', login_args)
 notes_args = 'verbe=get&v=4.17.8'
 NOTES = Route('eleves/%s/notes.awp', notes_args)
@@ -28,3 +28,5 @@ timing_args = 'verbe=get&v=4.17.8'
 TIMING = Route('E/%s/emploidutemps.awp', timing_args)
 documents_args = 'verbe=get&v=4.22.0&fichierId=%s&leTypeDeFichier=%s'
 DOCUMENTS = Route('telechargement.awp', documents_args)
+timeline_args = 'verbe=get&v=4.24.0'
+TIMELINE = Route('eleves/%s/timeline.awp', timeline_args)

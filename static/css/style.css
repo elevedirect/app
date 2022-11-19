@@ -214,11 +214,16 @@ hr {
     border: none !important;
     text-align: center;
     background-color: var(--grey) !important;
+    border-radius: 10px;
 }
 
 .message {
     border-radius: 10px;
     background-color: var(--grey);
+}
+
+.notification {
+    border-radius: 10px;
 }
 
 .notification code {
@@ -263,6 +268,63 @@ button, input {
     background-color: var(--active) !important;
     color: var(--bg) !important;
 }
+
 .is-warning {
     color: var(--secondary) !important;
+}
+
+.timeline {
+    padding: 1em;
+}
+
+.event {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    margin-top: .1em;
+}
+
+.event:not(:last-child)::after {
+    content: '';
+    background-color: var(--border);
+    width: .1em;
+    height: 3em;
+    display: block;
+}
+
+.event .intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.event .intro .icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+    border-radius: 50%;
+    border: 1px var(--border) solid;
+}
+
+.event .intro .icon svg path {
+    color: var(--primary);
+}
+
+.event .intro p {
+    text-align: center;
+}
+
+.event .intro p.small {
+    font-size: x-small;
+    color: var(--border);
+}
+
+.event .desc p {
+    font-size: small;
+    text-align: center;
+    color: var(--active);
 }

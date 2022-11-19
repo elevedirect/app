@@ -173,7 +173,8 @@ def load_dynamic(callback):
     tomorrow, french_tomorrow = getTomorrowDay()
     timing_tomorrow = school.get_timing(account['token'], account['id'], tomorrow, tomorrow)
     timing_tomorrow['date'] = french_tomorrow
-    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week, timing=timing, timing_tomorrow=timing_tomorrow, mversion=mobile_version, wversion=web_version)
+    timeline = school.get_timeline(account['token'], account['id'])
+    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week, timing=timing, timing_tomorrow=timing_tomorrow, mversion=mobile_version, wversion=web_version, events=timeline)
 
 
 @app.route('/')
@@ -240,7 +241,7 @@ def change_done(id_devoir, effectue):
 def download_file(fid, ftype, fname):
     cookie = request.cookies.get('account')
     account = json.loads(cookie)
-    doc = school.get_document({"id": fid, "libelle": fname, "type": ftype}, account['token'], True)
+    doc = school.get_document({"id": fid, "libelle": fname, "type": ftype}, account['token'], True, True)
     if type(doc['content']) not in (bytes, bytearray):
         open(f"cache/{doc['name']}", "w").write(doc['content'])
     else:
@@ -285,8 +286,8 @@ def login():
 @app.errorhandler(Exception)
 def error(_error):
     print(_error)
-    raise _error
-    # return redirect('/?error=true')
+    # raise _error
+    return redirect('/?error=true')
 
 
 if __name__ == '__main__':

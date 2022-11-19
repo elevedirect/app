@@ -1,10 +1,31 @@
 import base64
 import datetime
+import urllib.request
 import urllib
-
 from ecoledirect.api import *
 import json
 import requests
+import locale
+
+
+locale.setlocale(locale.LC_ALL, "fr_FR.UTF-8")
+
+
+def convert_dict_to_bytes(dict_):
+    new_dict = {}
+    for key in dict_.keys():
+        if type(dict_[key]) != int:
+            new_dict[key.encode()] = str(dict_[key]).encode()
+        else:
+            new_dict[key.encode()] = dict_[key]
+    return new_dict
+
+
+def get_french_date(date):
+    year, month, day = date.split('-')
+    date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
+    french_date = date_object.strftime("%A %d %B")
+    return french_date
 
 
 class EcoleDirect:
@@ -25,7 +46,7 @@ class EcoleDirect:
         url = self.endpoint + route.path + '?' + args
         headers = {
             'X-token': '',
-            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0',
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:106.0) Gecko/20100101 Firefox/106.0',
         }
         if 'token' in data.keys():
             headers['X-token'] = data['token']
@@ -75,26 +96,64 @@ class EcoleDirect:
             return None
             # raise error
 
-    def get_document(self, document, token, do_not_translate_name=False):
-        data = {
-            "forceDownload": 0,
-            "token": token
-        }
+    def get_timeline(self, token, identifiant):
+        try:
+            data = {
+                "token": token,
+                "id": identifiant
+            }
+            response = self._request(TIMELINE, data)
+            if response['expired'] or response['code'] == 520:
+                response['expired'] = True
+                return response
+            data = response['data']
+            elements = []
+            for el in data:
+                el_type = el['typeElement']
+                if el_type == 'Messagerie':
+                    icon = 'fas fa-enveloppe'
+                elif el_type == 'Note':
+                    icon = 'fas fa-award'
+                elif el_type == 'Document':
+                    icon = 'fas fa-folder-open'
+                else:
+                    icon = 'fas fa-calendar-plus'
+                el['icon'] = icon
+                el['french_date'] = get_french_date(el['date'])
+                elements.append(el)
+            print(elements)
+            return elements
+        except Exception as error:
+            print(f'Error while fetching timeline: {error.__class__.__name__}')
+            return None
+            # raise error
+
+    def get_document(self, document, token, do_not_translate_name=False, download=True):
         doc_id = document['id']
         doc_type = document['type']
         if not do_not_translate_name:
             doc_name = document['libelle'].encode('latin-1').decode('utf-8')
         else:
             doc_name = document['libelle']
-        new_doc_route = DOCUMENTS
-        args = new_doc_route.args
-        args = args % (doc_id, doc_type)
-        doc_content = self._request(DOCUMENTS, data, args, True)
         encoded_id = urllib.parse.quote(str(doc_id).encode())
         encoded_type = urllib.parse.quote(doc_type.encode())
         encoded_name = urllib.parse.quote(doc_name.encode())
         url = f"/file/{encoded_id}/{encoded_type}/{encoded_name}"
-        return {"content": doc_content, "name": doc_name, "url": url, "id": doc_id}
+        if download:
+            data = {
+                "forceDownload": 0,
+                "token": token
+            }
+            if not do_not_translate_name:
+                doc_name = document['libelle'].encode('latin-1').decode('utf-8')
+            else:
+                doc_name = document['libelle']
+            new_doc_route = DOCUMENTS
+            args = new_doc_route.args
+            args = args % (doc_id, doc_type)
+            doc_content = self._request(DOCUMENTS, data, args, True)
+            return {"content": doc_content, "name": doc_name, "url": url, "id": doc_id}
+        return {"name": doc_name, "url": url, "id": doc_id}
 
     def get_work(self, token, identifiant):
         try:
@@ -120,21 +179,21 @@ class EcoleDirect:
                         if detailed_homework.get('aFaire'):
                             if detailed_homework['aFaire']['idDevoir'] == homework['idDevoir']:
                                 homework['contenu'] = base64.b64decode(detailed_homework["aFaire"]["contenu"]).decode('utf-8')
-                            if len(detailed_homework['aFaire']['documents']) > 0:
-                                homework['has_documents'] = True
-                                documents = []
-                                for doc in detailed_homework['aFaire']['documents']:
-                                    documents.append(self.get_document(doc, token))
-                                homework['documents'] = documents
-                            if len(detailed_homework['aFaire']['documents']) == 0:
-                                homework['documents'] = []
-                                homework['has_documents'] = False
+                                if len(detailed_homework['aFaire']['documents']) > 0:
+                                    homework['has_documents'] = True
+                                    documents = []
+                                    for doc in detailed_homework['aFaire']['documents']:
+                                        documents.append(self.get_document(doc, token, download=False))
+                                    homework['documents'] = documents
+                                if len(detailed_homework['aFaire']['documents']) == 0:
+                                    homework['documents'] = []
+                                    homework['has_documents'] = False
                 formatted_response.append(work)
             return formatted_response
         except Exception as error:
-            # print(f'Error while fetching work: {error.__class__.__name__}')
-            # return None
-            raise error
+            print(f'Error while fetching work: {error.__class__.__name__}')
+            return None
+            # raise error
 
     def change_done(self, token, identifiant, id_devoir, effectue):
         effectue = not effectue

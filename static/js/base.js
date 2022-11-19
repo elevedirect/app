@@ -31,15 +31,24 @@ Date.prototype.getFullDay = function () {
     return ("0" + day).slice(-2);
 }
 
+var active_section = 'home'
+var all_sections = []
+
+function changeSectionTo(section_name) {
+    sections.forEach(section => {
+        section.style = 'display: none;'
+        if (section.className === `main ${section_name}`) {
+            section.style = ''
+        }
+    })
+}
+
 actions.forEach(action => {
+    all_sections.push(action.getAttribute('data-action'))
     action.addEventListener('click', () => {
         dataAction = action.getAttribute('data-action')
-        sections.forEach(section => {
-            section.style = 'display: none;'
-            if (section.className === `main ${dataAction}`) {
-                section.style = ''
-            }
-        })
+        active_section = dataAction
+        changeSectionTo(dataAction)
     })
 })
 
@@ -85,6 +94,7 @@ window.onload = () => {
             }
         })
     } else {
+        active_section = anchor
         sections.forEach(section => {
             section.style = 'display: none;'
             if (section.className === `main ${anchor}`) {
@@ -199,4 +209,3 @@ function switchWork(element) {
         currentDateString = `${currentDateObject.getFullYear()}-${currentDateObject.getFullMonth()}-${currentDateObject.getFullDay()}`
     }
 }
-

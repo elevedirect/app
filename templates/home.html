@@ -31,6 +31,25 @@
       </div>
     </div>
   </div>
+  <div class="card timeline">
+    <h1 class="title" style="text-align: center">Dernières nouvelles:</h1>
+    {% for event in events %}
+    <div class="event">
+      <div class="intro">
+        <div class="icon">
+          <i class="{{event.icon}}"></i>
+        </div>
+        <p class="small">{{event.french_date}}</p>
+        <p>{{event.titre}} {{event.soustitre}}</p>
+      </div>
+      <div class="desc">
+        <p>
+          {{event.contenu}}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 <div class="main notes" style="display: none">
   {% for periode in notes %}
@@ -161,7 +180,7 @@
           </div>
           <div class="modal" id="{{homework.idDevoir}}">
             <div class="modal-background"></div>
-            <div class="modal-content" style="background-color: #fff; padding: .5em">
+            <div class="modal-content" style="background-color: #fff; padding: 1em; width: 97%; border-radius: 15px">
               <h1 class="title">Contenu:</h1>
               <div class="content">
                 <h2>{{homework.matiere}}</h2>
