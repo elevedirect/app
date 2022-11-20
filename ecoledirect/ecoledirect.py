@@ -121,7 +121,6 @@ class EcoleDirect:
                 el['icon'] = icon
                 el['french_date'] = get_french_date(el['date'])
                 elements.append(el)
-            print(elements)
             return elements
         except Exception as error:
             print(f'Error while fetching timeline: {error.__class__.__name__}')

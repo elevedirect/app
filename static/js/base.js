@@ -3,6 +3,7 @@ const actions = document.querySelectorAll('.data-action')
 const homeworksContainer = document.getElementById('homeworks-container')
 const nextWorkButton = document.getElementById('nextwork')
 const previousWorkButton = document.getElementById('previouswork')
+let loader = document.querySelector('.eloader')
 let dataAction, dates, from, to, fromDateObject, fromYear, fromMonth, fromDay, fromDateString, toDateObject, toYear,
     toMonth, toDay, toDateString, currentDateObject, currentDateString, sampleDate, previousWeek, nextWeek, sampleDateString, sampleData
 var frenchDate
@@ -209,3 +210,17 @@ function switchWork(element) {
         currentDateString = `${currentDateObject.getFullYear()}-${currentDateObject.getFullMonth()}-${currentDateObject.getFullDay()}`
     }
 }
+
+function loaderStart() {
+    loader.classList.remove('unactive')
+}
+
+function loaderStop() {
+    loader.classList.remove('unactive')
+    setTimeout(() => {
+        loader.classList.add('unactive')
+    }, 500)
+}
+
+window.addEventListener('beforeunload', loaderStart)
+window.addEventListener('load', loaderStop)
