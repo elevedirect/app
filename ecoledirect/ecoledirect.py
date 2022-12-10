@@ -111,7 +111,7 @@ class EcoleDirect:
             for el in data:
                 el_type = el['typeElement']
                 if el_type == 'Messagerie':
-                    icon = 'fas fa-enveloppe'
+                    icon = 'fas fa-envelope'
                 elif el_type == 'Note':
                     icon = 'fas fa-award'
                 elif el_type == 'Document':
