@@ -129,6 +129,8 @@ def calculateAverage(matieres):
                 if note['valeur'] in ['Disp\xa0', 'Abs\xa0', 'NE\xa0', 'EA\xa0']:
                     continue
                 if note['sur'] != '20':
+                    if note['valeur'] == '' or note['sur'] == '':
+                        continue
                     note_sur = float(note['sur'].replace(',', '.'))
                     current_note = float(note['valeur'].replace(',', '.'))
                     new_note = current_note * 20 / note_sur
@@ -286,8 +288,8 @@ def login():
 @app.errorhandler(Exception)
 def error(_error):
     print(_error)
-    # raise _error
-    return redirect('/?error=true')
+    raise _error
+    # return redirect('/?error=true')
 
 
 if __name__ == '__main__':
