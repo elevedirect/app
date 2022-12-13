@@ -3,3 +3,4 @@
 /cache
 /certs/elevedirect_key.pem
 /ecoledirect/__pycache__
+.deepsource.toml
