@@ -1,6 +1,5 @@
 /config.ini
 /start.sh
+/cache
 /certs/elevedirect_key.pem
-ecoledirect/__pycache__/__init__.cpython-310.pyc
-ecoledirect/__pycache__/api.cpython-310.pyc
-ecoledirect/__pycache__/ecoledirect.cpython-310.pyc
+/ecoledirect/__pycache__
