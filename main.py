@@ -27,7 +27,7 @@ def getCurrentWeek():
 
 def getPreviousAndNextWeek(date=None):
     if date is None:
-        date = datetime.datetime.now() - datetime.timedelta(days=7)
+        date = datetime.datetime.now()
     date = date - datetime.timedelta(days=7)
     previous_dates = [(date + datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range(0 - date.weekday(), 7 - date.weekday())]
     date = date + datetime.timedelta(days=14)
@@ -150,6 +150,8 @@ def calculateAverage(matieres):
 
 def load_dynamic(callback):
     cookie = request.cookies.get('account')
+    if cookie is None:
+        return redirect('/')
     account = json.loads(cookie)
     notes_data = school.get_notes(account['token'], account['id'])
     if notes_data['expired']:
@@ -167,16 +169,11 @@ def load_dynamic(callback):
             final_average = 0
         final_average = round_up(final_average, 2)
         notes.append({'data': periode_notes, 'code': periode, 'nom': nom, 'average': final_average})
-    work_data = school.get_work(account['token'], account['id'])
+    current_week_days = getCurrentWeek()
+    work_data, tests = school.get_work(account['token'], account['id'], current_week_days, True)
     previous_week, next_week = getPreviousAndNextWeek()
-    today, french_today = getCurrentDay()
-    timing = school.get_timing(account['token'], account['id'], today, today)
-    timing['date'] = french_today
-    tomorrow, french_tomorrow = getTomorrowDay()
-    timing_tomorrow = school.get_timing(account['token'], account['id'], tomorrow, tomorrow)
-    timing_tomorrow['date'] = french_tomorrow
     timeline = school.get_timeline(account['token'], account['id'])
-    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week, timing=timing, timing_tomorrow=timing_tomorrow, mversion=mobile_version, wversion=web_version, events=timeline)
+    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week, mversion=mobile_version, wversion=web_version, events=timeline, tests=tests)
 
 
 @app.route('/')
@@ -206,8 +203,8 @@ def home():
 def get_work_day(day):
     cookie = request.cookies.get('account')
     account = json.loads(cookie)
-    day_work_data = school.get_work_date(account['token'], account['id'], day)['data']
-    year, month, day = day_work_data['date'].split('-')
+    day_work_data = school.get_work(account['token'], account['id'], [day])[0]
+    year, month, day = day.split('-')
     date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
     french_date = date_object.strftime("%A %d %B")
     day_work_data['frenchDate'] = french_date

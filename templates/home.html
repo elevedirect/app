@@ -169,31 +169,63 @@
           <b>{{date.showing_date}}</b>
         </div>
         {% for homework in date.homeworks %}
-          <div class="column work" onclick="workPopup('{{homework.idDevoir}}')">
+          <div class="column work" onclick="workPopup('{{homework.id}}')">
             <article class="message content">
               <span class="centered notification"><code>{{homework.matiere}}</code></span>
               <blockquote class="message-body">
+                {% if homework.has_homework %}
                 Evaluation: <i class="fas fa-poll {{homework.interrogation}}"></i>&nbsp;Effectué: <i class="fas fa-check-square {{homework.effectue}}"></i>
-                <br>
+                {% endif %}
+                {% if homework.has_seance %}
+                <p style="margin-bottom: 0;">Contenu de séance <i class="fas fa-users-class"></i></p>
+                {% endif %}
               </blockquote>
             </article>
           </div>
-          <div class="modal" id="{{homework.idDevoir}}">
+          <div class="modal" id="{{homework.id}}">
             <div class="modal-background"></div>
             <div class="modal-content" style="background-color: #fff; padding: 1em; width: 97%; border-radius: 15px">
               <h1 class="title">Contenu:</h1>
               <div class="content">
                 <h2>{{homework.matiere}}</h2>
-                {{homework.contenu|safe}}
-                {% if homework.has_documents %}
+                <div class="tabs is-centered is-full">
+                  <ul>
+                    <li class="is-active" tabs_data="{{homework.id}}0" onclick="homeworkTab(this, '', 'display: none', '{{homework.id}}', '1')">
+                      <a>
+                        <span class="icon is-small"><i class="fas fa-ruler" aria-hidden="true"></i></span>
+                        <span>Devoirs</span>
+                      </a>
+                    </li>
+                    <li tabs_data="{{homework.id}}1" onclick="homeworkTab(this, 'display: none', '', '{{homework.id}}', '0')">
+                      <a>
+                        <span class="icon is-small"><i class="fas fa-users-class" aria-hidden="true"></i></span>
+                        <span>Contenu de séance</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div id="{{homework.id}}_devoirs">
+                  {{homework.contenu|safe}}
+                  {% if homework.has_documents %}
                   <h3>Documents:</h3>
                   {% for doc in homework.documents %}
-                    <span class="tag is-normal is-a-link"><a href="{{doc.url}}" download="{{doc.name}}">{{doc.name}}</a></span>
+                  <span class="tag is-normal is-a-link"><a href="{{doc.url}}" download="{{doc.name}}">{{doc.name}}</a></span>
                   {% endfor %}
-                {% endif %}
+                  {% endif %}
+                </div>
+                <div id="{{homework.id}}_seance" style="display: none">
+                  {{homework.seance.contenu|safe}}
+                  {% if homework.seance.has_documents %}
+                  <h3>Documents:</h3>
+                  {% for doc in homework.seance.documents %}
+                  <span class="tag is-normal is-a-link"><a href="{{doc.url}}" download="{{doc.name}}">{{doc.name}}</a></span>
+                  {% endfor %}
+                  {% endif %}
+                </div>
                 <br>
                 <br>
-                <label class="checkbox" onclick="switchDone(this, '{{homework.idDevoir}}')">
+                {% if homework.has_homework %}
+                <label class="checkbox" onclick="switchDone(this, '{{homework.id}}')">
                   Effectué
                   <i class="fas fa-check-square {{homework.effectue}}" data="{{homework.effectue}}"></i>
                 </label>
@@ -201,9 +233,10 @@
                   Evaluation
                   <i class="fas fa-poll {{homework.interrogation}}"></i>
                 </label>
+                {% endif %}
               </div>
             </div>
-            <button class="modal-close is-large" aria-label="close" onclick="workPopup('{{homework.idDevoir}}')"></button>
+            <button class="modal-close is-large" aria-label="close" onclick="workPopup('{{homework.id}}')"></button>
           </div>
         {% endfor %}
       {% endif %}
@@ -217,78 +250,15 @@
     </ul>
   </nav>
 </div>
-<div class="main timing" style="display: none">
-  <div class="calendar">
-    {% if timing.empty %}
-    <div class="content center">
-      <h1 class="title is-3">Rien pour aujourd'hui, bon repos !</h1>
-    </div>
-    {% else %}
-    <div class="content center">
-      <b class="title is-4">Emploi du temps du {{timing.date}}:</b>
-    </div>
-      {% for i in range(0, timing.classes|length) %}
-        {% if not timing.classes.get(i|string).start == '0000-00-00 23:59' %}
-          <div class="box timing" style="--current: {{timing.classes.get(i|string).color}}; background-color: var(--current);">
-            <h1 class="title is-4">{{timing.classes.get(i|string).name}}</h1>
-            <h5 class="subtitle is-6">
-              Matière: {{timing.classes.get(i|string).matiere}}<br>
-              De: {{timing.classes.get(i|string).start.split(' ')[-1]}}<br>
-              A: {{timing.classes.get(i|string).end.split(' ')[-1]}}
-            </h5>
-            <p>
-              Salle: {{timing.classes.get(i|string).salle}}
-            </p>
-            {% if timing.classes.get(i|string).devoirs %}
-            Devoirs donnés pour ce cours !&nbsp;<i class="far fa-exclamation-triangle is-danger"></i>
-            {% else %}
-              Aucuns devoirs <i class="far fa-laptop-house {{timing.classes.get(i|string).devoirs}}"></i>&nbsp;
-            {% endif %}
-            {% if timing.classes.get(i|string).contenuseance %}
-            Ce cours à un contenu de séance !&nbsp;<i class="far fa-exclamation-triangle is-danger"></i>
-            {% else %}
-            Pas de contenu de séance <i class="far fa-th-list {{timing.classes.get(i|string).contenuseance}}"></i>
-            {% endif %}
-          </div>
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-    <br>
-    <br>
-    {% if timing_tomorrow.empty %}
-    <div class="content center">
-      <h1 class="title is-3">Rien pour demain, pensez à réviser vos cours !</h1>
-    </div>
-    {% else %}
-    <div class="content center">
-      <b class="title is-4">Emploi du temps de demain (du {{timing_tomorrow.date}}):</b>
-    </div>
-      {% for i in range(0, timing_tomorrow.classes|length) %}
-        {% if not timing_tomorrow.classes.get(i|string).start == '0000-00-00 23:59' %}
-          <div class="box timing" style="--current: {{timing_tomorrow.classes.get(i|string).color}}; background-color: var(--current);">
-            <h1 class="title is-4">{{timing_tomorrow.classes.get(i|string).name}}</h1>
-            <h5 class="subtitle is-6">
-              Matière: {{timing_tomorrow.classes.get(i|string).matiere}}<br>
-              De: {{timing_tomorrow.classes.get(i|string).start.split(' ')[-1]}}<br>
-              A: {{timing_tomorrow.classes.get(i|string).end.split(' ')[-1]}}
-            </h5>
-            <p>
-              Salle: {{timing_tomorrow.classes.get(i|string).salle}}
-            </p>
-            {% if timing_tomorrow.classes.get(i|string).devoirs %}
-            Devoirs donnés pour ce cours !&nbsp;<i class="far fa-exclamation-triangle is-danger"></i>
-            {% else %}
-              Aucuns devoirs <i class="far fa-laptop-house {{timing_tomorrow.classes.get(i|string).devoirs}}"></i>&nbsp;
-            {% endif %}
-            {% if timing_tomorrow.classes.get(i|string).contenuseance %}
-            Ce cours à un contenu de séance !&nbsp;<i class="far fa-exclamation-triangle is-danger"></i>
-            {% else %}
-            Pas de contenu de séance <i class="far fa-th-list {{timing_tomorrow.classes.get(i|string).contenuseance}}"></i>
-            {% endif %}
-          </div>
-        {% endif %}
-      {% endfor %}
-    {% endif %}
+<div class="main tests" style="display: none">
+  <div class="columns is-multiline is-mobile">
+<!--    {{tests}}-->
+<!--    {% for eval in tests %}-->
+<!--      <div class="column is-half">-->
+<!--        First column-->
+<!--      </div>-->
+<!--    {% endfor %}-->
+    <h1>Arrive bientôt...</h1>
   </div>
 </div>
 <div class="main contact" style="display: none">
