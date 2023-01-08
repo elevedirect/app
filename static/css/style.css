@@ -363,3 +363,11 @@ button, input {
 .eloader .spinner .fa-spinner {
     position: absolute;
 }
+
+.tabs.is-full {
+    width: 100%;
+}
+
+.tabs.is-full ul {
+    margin: 0 !important;
+}
