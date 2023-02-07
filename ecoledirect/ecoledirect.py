@@ -75,6 +75,9 @@ class EcoleDirect:
             "date": date
         }
         response = self._request(DATE_WORK, data)
+        if response['expired'] or response['code'] == 520:
+            response['expired'] = True
+            return response
         return response
 
     def get_notes(self, token, identifiant):
@@ -160,6 +163,8 @@ class EcoleDirect:
             tests = []
             for day in days_list:
                 day_work = self.get_work_date(token, identifiant, day)
+                if day_work['expired']:
+                    return True, []
                 work = {'homeworks': day_work['data']['matieres'], 'date': day}
                 year, month, day = day.split('-')
                 date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
@@ -167,6 +172,8 @@ class EcoleDirect:
                 work['showing_date'] = speaking_date
                 for homework in work['homeworks']:
                     homework['seance'] = {}
+                    homework['date'] = day
+                    homework['french_date'] = speaking_date
                     if 'aFaire' in homework.keys():
                         homework['has_homework'] = True
                         if homework['aFaire']['idDevoir'] == homework['id']:

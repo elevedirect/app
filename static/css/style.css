@@ -345,9 +345,91 @@ button, input {
     display: none;
 }
 
+.tag.is-el {
+    background-color: var(--primary);
+    color: var(--bg);
+}
+
 .eloader p {
     margin-top: 1em;
 }
+
+.button.is-small .icon {
+    top: 50%;
+    position: relative;
+    transform: translate(0, -60%);
+}
+
+.button.is-small {
+    transition: .5s ease-in-out;
+}
+
+.button.is-small.rotated {
+    rotate: -90deg;
+}
+
+.hero.is-info {
+    padding: .5rem 1.5rem;
+    background-color: var(--secondary);
+    width: 95%;
+    margin: auto;
+    border-radius: 5px;
+}
+
+.hero.is-danger {
+    padding: .5rem 1.5rem;
+    width: 95%;
+    margin: auto auto 1em;
+    border-radius: 5px;
+}
+
+.tag.is-el.is-danger {
+    color: #f14668;
+    background-color: var(--bg);
+}
+
+.hero.is-info a {
+    color: var(--primary) !important;
+}
+
+.hero.is-info .content, .hero.is-danger .content {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.hero .button.is-small {
+    border-radius: 5px !important;
+    font-size: .9em;
+}
+
+.hero.is-info .tag.is-el {
+    background-color: var(--bg);
+    color: var(--secondary);
+    font-weight: bold;
+}
+
+.message.is-eval .message-body {
+    transition: .5s ease-in-out;
+}
+
+.message.is-eval .message-body {
+    height: 0;
+    overflow: hidden;
+}
+
+.message.is-eval .message-body .subtitle {
+    transition: .8s ease-in-out;
+    color: var(--grey);
+}
+
+.message.is-eval.expanded .message-body {
+    height: calc(100%);
+}
+
+.message.is-eval.expanded .message-body .subtitle {
+    color: var(--text);
+}
+
 
 .eloader .spinner {
     display: flex;

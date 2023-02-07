@@ -4,6 +4,35 @@
 {% block content %}
 <link rel="stylesheet" href="/static/css/style.css">
 <div class="main home">
+  <div class="section hero is-info banner" id="notification-banner" style="display: none" >
+    <div class="content">
+      <span class="tag is-el is-medium">Nouveau</span>
+      <p>
+        Active les notifications pour réviser tes contrôles et être auc courant des nouvelles notes !
+        Installe l'application sur ton écran d'accueil et reviens ici !
+      </p>
+      <button class="button is-small" onclick="subscribeNotifs()">Active les notifications&nbsp;<i class="fas fa-bell"></i></button>
+    </div>
+  </div>
+  <div id="new-app" style="display: none">
+<!--    <div class="section hero is-danger banner">-->
+<!--      <div class="content">-->
+<!--        <span class="tag is-el is-danger is-medium">Attention</span>-->
+<!--        <p>-->
+<!--          L'application mobile EleveDirect (elevedirect.apk) n'est plus supportée et comporte des incompatibilités avec les dernières versions du site web !-->
+<!--          Veuillez la désinstaller et utiliser les navigateurs OperaGX, Samsung Internet ou Chrome pour créer un raccourci sur l'écran d'accueil, qui agira comme une application (via <i class="fas fa-ellipsis-v"></i> ou partager <i class="fas fa-share-alt"></i> ) !-->
+<!--        </p>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="section hero is-info banner">
+      <div class="content">
+        <span class="tag is-el is-medium">Nouveau</span>
+        <p>
+          Une nouvelle version de l'application est disponible ! Consulte <a href="https://app-eleve-direct.camarm.fr" target="_blank">https://app-eleve-direct.camarm.fr</a> et ajoute le site sur ton écran d'accueil !
+        </p>
+      </div>
+    </div>
+  </div>
   <div class="card">
     <div class="card-content">
       <div class="media">
@@ -251,14 +280,51 @@
   </nav>
 </div>
 <div class="main tests" style="display: none">
-  <div class="columns is-multiline is-mobile">
-<!--    {{tests}}-->
-<!--    {% for eval in tests %}-->
-<!--      <div class="column is-half">-->
-<!--        First column-->
-<!--      </div>-->
-<!--    {% endfor %}-->
-    <h1>Arrive bientôt...</h1>
+  <div class="columns is-multiline is-mobile" style="width: 100%">
+    <h1 class="title" style="padding-left: .9em; padding-top: .5em">Évaluations</h1>
+    {% for eval in tests %}
+      <div class="column is-full">
+        <article class="message is-danger is-eval">
+          <div class="message-header">
+            <p>{{eval.matiere}} <sub>{{eval.french_date}}</sub></p>
+            <button aria-label="expand" class="button is-small is-danger is-light rotated" onclick="this.parentElement.parentElement.classList.toggle('expanded'); this.classList.toggle('rotated')">
+              <span class="icon">
+                <i class="fas fa-angle-down fa-lg"></i>
+              </span>
+            </button>
+          </div>
+          <div class="message-body" style="text-align: left">
+            <p class="subtitle">Devoirs:</p>
+            <p>
+              {{eval.contenu|safe}}
+            </p>
+            <br>
+            <br>
+            {% if eval.has_seance %}
+              <p class="subtitle">Séance:</p>
+              <p>
+                {{eval.seance.contenu|safe}}
+              </p>
+            {% endif %}
+            <div class="files">
+              {% if eval.has_documents or eval.seance.has_documents %}
+              <p class="subtitle">Fichiers associés</p>
+              {% endif %}
+              {% if eval.has_documents %}
+              {% for file in eval.documents %}
+              <span class="tag"><a href="{{file.url}}" download="{{file.name}}">{{file.name}}</a></span>
+              {% endfor %}
+              {% endif %}
+              {% if eval.has_seance and eval.seance.has_documents %}
+              {% for file in eval.seance.documents %}
+              <span class="tag"><a href="{{file.url}}" download="{{file.name}}">{{file.name}}</a></span>
+              {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      </div>
+    {% endfor %}
   </div>
 </div>
 <div class="main contact" style="display: none">
@@ -296,4 +362,12 @@
     <p>Vous naviguez actuellement sur la version {{wversion}} de EleveDirect en ligne !</p>
   </div>
 </div>
+<script>
+    if (window.isSecureContext && Notification.permission !== 'granted' && navigator.permissions !== 'granted') {
+        document.getElementById('notification-banner').style = ''
+    }
+    if (!window.isSecureContext) {
+        document.getElementById('new-app').style = ''
+    }
+</script>
 {% endblock %}

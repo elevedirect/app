@@ -6,9 +6,28 @@ const previousWorkButton = document.getElementById('previouswork')
 let loader = document.querySelector('.eloader')
 let dataAction, dates, from, to, fromDateObject, fromYear, fromMonth, fromDay, fromDateString, toDateObject, toYear,
     toMonth, toDay, toDateString, currentDateObject, currentDateString, sampleDate, previousWeek, nextWeek, sampleDateString,
-    sampleData, content, footer, description, homework_content, seance_content, docs, seance_docs
+    sampleData, content, footer, description, homework_content, seance_content, docs, seance_docs, notif
 var html, order
 
+
+async function subscribeNotifs() {
+    let permission = await Notification.requestPermission()
+    let sync_permission = await navigator.permissions.query({name: 'periodic-background-sync'});
+    if (permission === 'granted' && sync_permission.state === 'granted') {
+        notif = new Notification('Bravo !', {
+            body: "Bravo tu as activé les notifications !\nTu seras notifié des évaluation et nouvelles notes.",
+            icon: "/static/legal/icon.png"
+        })
+        notif.addEventListener('click', () => {
+            notif.close()
+        })
+        document.getElementById('notification-banner').style = 'display: none'
+        location.reload()
+    }
+    else {
+        alert('Veuillez accepter la synchronization en arrière plan ainsi que les notification...')
+    }
+}
 
 Date.prototype.addDays = function (days) {
     let date = new Date(this.valueOf());
