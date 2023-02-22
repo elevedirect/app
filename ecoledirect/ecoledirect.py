@@ -75,6 +75,9 @@ class EcoleDirect:
             "date": date
         }
         response = self._request(DATE_WORK, data)
+        if response['expired'] or response['code'] == 520:
+            response['expired'] = True
+            return response
         return response
 
     def get_notes(self, token, identifiant):
@@ -154,45 +157,66 @@ class EcoleDirect:
             return {"content": doc_content, "name": doc_name, "url": url, "id": doc_id}
         return {"name": doc_name, "url": url, "id": doc_id}
 
-    def get_work(self, token, identifiant):
+    def get_work(self, token, identifiant, days_list, include_tests=False):
         try:
-            data = {
-                "anneeScolaire": "",
-                "token": token,
-                "id": identifiant
-            }
-            response = self._request(WORK, data)
-            if response['expired']:
-                return response
-            response_keys = response['data'].copy().keys()
             formatted_response = []
-            for date in response_keys:
-                new_response = self.get_work_date(token, identifiant, date)
-                work = {'homeworks': response['data'][date], 'date': date}
-                year, month, day = date.split('-')
+            tests = []
+            for day in days_list:
+                day_work = self.get_work_date(token, identifiant, day)
+                if day_work['expired']:
+                    return True, []
+                work = {'homeworks': day_work['data']['matieres'], 'date': day}
+                year, month, day = day.split('-')
                 date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
                 speaking_date = date_object.strftime("%A %d %B")
                 work['showing_date'] = speaking_date
                 for homework in work['homeworks']:
-                    for detailed_homework in new_response['data']['matieres']:
-                        if detailed_homework.get('aFaire'):
-                            if detailed_homework['aFaire']['idDevoir'] == homework['idDevoir']:
-                                homework['contenu'] = base64.b64decode(detailed_homework["aFaire"]["contenu"]).decode('utf-8')
-                                if len(detailed_homework['aFaire']['documents']) > 0:
-                                    homework['has_documents'] = True
-                                    documents = []
-                                    for doc in detailed_homework['aFaire']['documents']:
-                                        documents.append(self.get_document(doc, token, download=False))
-                                    homework['documents'] = documents
-                                if len(detailed_homework['aFaire']['documents']) == 0:
-                                    homework['documents'] = []
-                                    homework['has_documents'] = False
+                    homework['seance'] = {}
+                    homework['date'] = day
+                    homework['french_date'] = speaking_date
+                    if 'aFaire' in homework.keys():
+                        homework['has_homework'] = True
+                        if homework['aFaire']['idDevoir'] == homework['id']:
+                            homework['contenu'] = base64.b64decode(homework["aFaire"]["contenu"]).decode('utf-8')
+                            if len(homework['aFaire']['documents']) > 0:
+                                homework['has_documents'] = True
+                                documents = []
+                                for doc in homework['aFaire']['documents']:
+                                    documents.append(self.get_document(doc, token, download=False))
+                                homework['documents'] = documents
+                            if len(homework['aFaire']['documents']) == 0:
+                                homework['documents'] = []
+                                homework['has_documents'] = False
+                            homework['effectue'] = homework['aFaire']['effectue']
+                            if homework['interrogation']:
+                                tests.append(homework)
+                    else:
+                        homework['contenu'] = 'Rien à afficher'
+                        homework['has_homework'] = False
+                    if 'contenuDeSeance' in homework.keys():
+                        homework['has_seance'] = True
+                        if homework['contenuDeSeance']['idDevoir'] == homework['id']:
+                            homework['seance']['contenu'] = base64.b64decode(homework["contenuDeSeance"]["contenu"]).decode('utf-8')
+                            if len(homework['contenuDeSeance']['documents']) > 0:
+                                homework['seance']['has_documents'] = True
+                                documents = []
+                                for doc in homework['contenuDeSeance']['documents']:
+                                    documents.append(self.get_document(doc, token, download=False))
+                                homework['seance']['documents'] = documents
+                            if len(homework['contenuDeSeance']['documents']) == 0:
+                                homework['seance']['documents'] = []
+                                homework['seance']['has_documents'] = False
+                    else:
+                        homework['seance']['contenu'] = 'Rien à afficher'
+                        homework['has_seance'] = False
                 formatted_response.append(work)
+            if include_tests:
+                return formatted_response, tests
             return formatted_response
         except Exception as error:
             print(f'Error while fetching work: {error.__class__.__name__}')
-            return None
-            # raise error
+            # return None, None
+            raise error
 
     def change_done(self, token, identifiant, id_devoir, effectue):
         effectue = not effectue

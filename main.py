@@ -1,4 +1,6 @@
 import datetime
+import os
+
 from ecoledirect import EcoleDirect as ED
 from flask import Flask, render_template, request, make_response, redirect, send_file
 import json
@@ -27,7 +29,7 @@ def getCurrentWeek():
 
 def getPreviousAndNextWeek(date=None):
     if date is None:
-        date = datetime.datetime.now() - datetime.timedelta(days=7)
+        date = datetime.datetime.now()
     date = date - datetime.timedelta(days=7)
     previous_dates = [(date + datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range(0 - date.weekday(), 7 - date.weekday())]
     date = date + datetime.timedelta(days=14)
@@ -150,6 +152,8 @@ def calculateAverage(matieres):
 
 def load_dynamic(callback):
     cookie = request.cookies.get('account')
+    if cookie is None:
+        return redirect('/')
     account = json.loads(cookie)
     notes_data = school.get_notes(account['token'], account['id'])
     if notes_data['expired']:
@@ -167,16 +171,15 @@ def load_dynamic(callback):
             final_average = 0
         final_average = round_up(final_average, 2)
         notes.append({'data': periode_notes, 'code': periode, 'nom': nom, 'average': final_average})
-    work_data = school.get_work(account['token'], account['id'])
+    current_week_days = getCurrentWeek()
     previous_week, next_week = getPreviousAndNextWeek()
-    today, french_today = getCurrentDay()
-    timing = school.get_timing(account['token'], account['id'], today, today)
-    timing['date'] = french_today
-    tomorrow, french_tomorrow = getTomorrowDay()
-    timing_tomorrow = school.get_timing(account['token'], account['id'], tomorrow, tomorrow)
-    timing_tomorrow['date'] = french_tomorrow
+    work_data, week_tests = school.get_work(account['token'], account['id'], current_week_days, True)
+    _, next_week_tests = school.get_work(account['token'], account['id'], next_week, True)
+    _, two_weeks_later = getPreviousAndNextWeek(datetime.datetime.now() + datetime.timedelta(weeks=1))
+    _, two_weeks_later_tests = school.get_work(account['token'], account['id'], two_weeks_later, True)
     timeline = school.get_timeline(account['token'], account['id'])
-    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week, timing=timing, timing_tomorrow=timing_tomorrow, mversion=mobile_version, wversion=web_version, events=timeline)
+    tests = week_tests + next_week_tests + two_weeks_later_tests
+    return render_template(callback, account=account, notes=notes, work=work_data, current_week=getCurrentWeek(), previous_week=previous_week, next_week=next_week, mversion=mobile_version, wversion=web_version, events=timeline, tests=tests)
 
 
 @app.route('/')
@@ -197,6 +200,61 @@ def root():
     return render_template('login.html', expired=expired, error=error)
 
 
+@app.route('/get-notifs')
+def get_notifications():
+    cookie = request.cookies.get('account')
+    account = json.loads(cookie)
+    all_notifs = []
+    today = datetime.datetime.now()
+    notify_day = today + datetime.timedelta(days=8)
+    today = int(''.join(today.strftime("%Y-%m-%d").split('-')))
+    notify_day = int(''.join(notify_day.strftime("%Y-%m-%d").split('-')))
+    current_week_days = getCurrentWeek()
+    _, next_week = getPreviousAndNextWeek()
+    current_week_work, week_tests = school.get_work(account['token'], account['id'], current_week_days, True)
+    if type(current_week_work) is not list:
+        return redirect('/?expired=true')
+    next_week_work, next_week_tests = school.get_work(account['token'], account['id'], next_week, True)
+    tests = week_tests + next_week_tests
+    all_work = current_week_work + next_week_work
+    timeline = school.get_timeline(account['token'], account['id'])
+    if os.path.isfile(f"cache/notifs_{account['id']}.tests.notifs"):
+        notifications_tests = open(f"cache/notifs_{account['id']}.tests.notifs").read().split(',')
+    else:
+        open(f"cache/notifs_{account['id']}.tests.notifs", "x")
+        notifications_tests = []
+    if os.path.isfile(f"cache/notifs_{account['id']}.homework.notifs"):
+        notifications_homework = open(f"cache/notifs_{account['id']}.homework.notifs").read().split(',')
+    else:
+        open(f"cache/notifs_{account['id']}.homework.notifs", "x")
+        notifications_homework = []
+    if os.path.isfile(f"cache/notifs_{account['id']}.events.notifs"):
+        notifications_events = open(f"cache/notifs_{account['id']}.events.notifs").read().split(',')
+    else:
+        open(f"cache/notifs_{account['id']}.events.notifs", "x")
+        notifications_events = []
+    for test in tests:
+        if str(test['id']) not in notifications_tests:
+            if int(''.join(test['date'].split('-'))) <= notify_day and int(''.join(test['date'].split('-'))) >= today:
+                notifications_tests.append(str(test['id']))
+                all_notifs.append({"title": f"Contrôle de {test['matiere']}", "body": f"Le contrôle de {test['matiere']} aura lieu dans moins d'une semaine ! Pense à réviser !", "icon": "/static/legal/icon.png"})
+    for day in all_work:
+        for homework in day['homeworks']:
+            if str(homework['id']) not in notifications_homework:
+                if homework['has_homework']:
+                    if int(''.join(homework['date'].split('-'))) <= notify_day and int(''.join(homework['date'].split('-'))) <= today and not homework['effectue']:
+                        notifications_homework.append(str(homework['id']))
+                        all_notifs.append({"title": f"Devoirs de {homework['matiere']}", "body": f"Il te reste des devoirs en {homework['matiere']}. N'oublie pas de les faire !", "icon": "/static/legal/iconwhite.png"})
+    for event in timeline:
+        if event['typeElement'] == 'Note' and f"{event['soustitre']}{event['date']}" not in notifications_events and event['soustitre'] != '' and int(''.join(event['date'].split('-'))) >= today:
+            notifications_events.append(f"{event['soustitre']}{event['date']}")
+            all_notifs.append({"title": f"Nouvelle note en {event['soustitre']}", "body": f"Ta note de {event['soustitre']} sur \"{event['contenu']}\" est maintenant disponible.", "icon": "/static/legal/icon.png"})
+    open(f"cache/notifs_{account['id']}.tests.notifs", "w").write(",".join(notifications_tests))
+    open(f"cache/notifs_{account['id']}.homework.notifs", "w").write(",".join(notifications_homework))
+    open(f"cache/notifs_{account['id']}.events.notifs", "w").write(",".join(notifications_events))
+    return {"data": all_notifs}
+
+
 @app.route('/home')
 def home():
     return load_dynamic('home.html')
@@ -206,8 +264,8 @@ def home():
 def get_work_day(day):
     cookie = request.cookies.get('account')
     account = json.loads(cookie)
-    day_work_data = school.get_work_date(account['token'], account['id'], day)['data']
-    year, month, day = day_work_data['date'].split('-')
+    day_work_data = school.get_work(account['token'], account['id'], [day])[0]
+    year, month, day = day.split('-')
     date_object = datetime.datetime(year=int(year), month=int(month), day=int(day))
     french_date = date_object.strftime("%A %d %B")
     day_work_data['frenchDate'] = french_date
@@ -285,11 +343,16 @@ def login():
     return render_template('login.html', failed='true')
 
 
+@app.route('/service-worker.js')
+def service_worker():
+    return send_file('static/js/service-worker.js')
+
+
 @app.errorhandler(Exception)
 def error(_error):
     print(_error)
-    raise _error
-    # return redirect('/?error=true')
+    # raise _error
+    return redirect('/?error=true')
 
 
 if __name__ == '__main__':

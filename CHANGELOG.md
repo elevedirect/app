@@ -1,4 +1,4 @@
-Rester connecté & fichiers associés aux devoirs
+Page évaluations et aide avec IA
 ---
-Une option pour rester connecté à son compte a été ajoutée et les fichiers associés aux devoirs sont maintenant visibles.
-Vous pouvez maintenant recharger l'application mobile en effectuant un scroll vers le haut et vous pouvez aussi télécharger les fichiers. 
+La page emploi du temps à été remplacée par la page évaluations, car elle était inutilisée...
+Une page aide a aussi été ajoutée. Vous pouvez maintenant poser des questions à l'intelligence artificielle ChatGPT pour vos devoirs !   

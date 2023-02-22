@@ -47,7 +47,7 @@
       <a class="link is-info data-action" href="#homework" data-action="homework"><i class="far fa-briefcase"></i>&nbsp;|&nbsp;Devoirs</a>
     </p>
     <p class="level-item has-text-centered">
-      <a class="link is-info data-action" href="#timing" data-action="timing"><i class="far fa-calendar-alt"></i>&nbsp;|&nbsp;Emploi du temps</a>
+      <a class="link is-info data-action" href="#tests" data-action="tests"><i class="far fa-poll"></i>&nbsp;|&nbsp;Evaluations <span class="tag is-el">Nouveau</span></a>
     </p>
     <p class="level-item has-text-centered">
       <a class="link is-info data-action" href="#contact" data-action="contact"><i class="far fa-id-card"></i>&nbsp;|&nbsp;Contact</a>
@@ -58,5 +58,24 @@
 {% block content %}
 {% endblock %}
 <script src="/static/js/base.js"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js', { scope: "/" })
+            .catch(err => (console.error(err)))
+        navigator.serviceWorker.ready
+            .then(swRegistration => {
+                if ('periodicSync' in swRegistration) {
+                    return swRegistration.periodicSync.register('notifs', {
+                        minInterval: 5 * 60 * 1000, // 5 minutes in ms
+                    });
+                } else {
+                    alert('Les notifications ne seront pas disponibles sur ce navigateur... Utilisez chrome, opera gx ou samsung internet à la place')
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+</script>
 </body>
 </html>
