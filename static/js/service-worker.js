@@ -3,6 +3,10 @@ self.addEventListener('install', (evt) => {
 });
 
 
+self.addEventListener('fetch', function(event) {
+
+})
+
 self.addEventListener('periodicsync', function(event) {
     if (event.tag === 'notifs') {
         event.waitUntil(getNotifications())
@@ -26,3 +30,6 @@ async function getNotifications() {
 }
 
 window.setInterval(getNotifications, 5 * 60 * 1000)
+
+
+getNotifications()

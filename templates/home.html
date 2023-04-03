@@ -2,7 +2,6 @@
 
 {% block name %}Accueil{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="/static/css/style.css">
 <div class="main home">
   <div class="section hero is-info banner" id="notification-banner" style="display: none" >
     <div class="content">
@@ -24,14 +23,14 @@
 <!--        </p>-->
 <!--      </div>-->
 <!--    </div>-->
-    <div class="section hero is-info banner">
-      <div class="content">
-        <span class="tag is-el is-medium">Nouveau</span>
-        <p>
-          Une nouvelle version de l'application est disponible ! Consulte <a href="https://app-eleve-direct.camarm.fr" target="_blank">https://app-eleve-direct.camarm.fr</a> et ajoute le site sur ton écran d'accueil !
-        </p>
-      </div>
-    </div>
+<!--    <div class="section hero is-info banner">-->
+<!--      <div class="content">-->
+<!--        <span class="tag is-el is-medium">Nouveau</span>-->
+<!--        <p>-->
+<!--          Une nouvelle version de l'application est disponible ! Consulte <a href="https://app.elevedirect.tk" target="_blank">https://app.elevedirect.tk</a> et ajoute le site sur ton écran d'accueil !-->
+<!--        </p>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
   <div class="card">
     <div class="card-content">
@@ -98,7 +97,7 @@
           <td><b>{{matiere.nom}}</b></td>
           <td>
               {% for note in matiere.notes %}
-                <span onclick="notePopup(this)">{{note.valeur}}/{{note.sur}}<sup><abbr>({{note.coef}})</abbr></sup>
+                <span onclick="notePopup(this)" class="significatif{{note.significatif}}">{{note.valeur}}/{{note.sur}}<sup><abbr>({{note.coef}})</abbr></sup>
                 <div class="modal">
                   <div class="modal-background"></div>
                   <div class="modal-content">
@@ -369,5 +368,6 @@
     if (!window.isSecureContext) {
         document.getElementById('new-app').style = ''
     }
+    getNotifications()
 </script>
 {% endblock %}

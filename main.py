@@ -80,7 +80,7 @@ def getPeriodes(periodes):
 
 
 def parseNotes(notes):
-    return [{'valeur': note['valeur'], 'sur': note['noteSur'], 'coef': note['coef'], 'periode': note['codePeriode'],
+    return [{'valeur': note['valeur'], 'sur': note['noteSur'], 'coef': note['coef'], 'significatif': not note['nonSignificatif'], 'periode': note['codePeriode'],
              'devoir': note['devoir'], 'matiere': note['libelleMatiere'], 'matiere_code': note['codeMatiere']} for note in notes]
 
 
@@ -128,13 +128,14 @@ def calculateAverage(matieres):
             sum_notes = 0
             coefficients_sum = 0
             for note in matiere['notes']:
-                if note['valeur'] in ['Disp\xa0', 'Abs\xa0', 'NE\xa0', 'EA\xa0']:
+                if note['valeur'] in ['Disp\xa0', 'Abs\xa0', 'NE\xa0', 'EA\xa0'] or not note['significatif']:
                     continue
                 if note['sur'] != '20':
                     if note['valeur'] == '' or note['sur'] == '':
                         continue
                     note_sur = float(note['sur'].replace(',', '.'))
                     current_note = float(note['valeur'].replace(',', '.'))
+                    note['valeur_originale'] = f"{current_note}/{note_sur}"
                     new_note = current_note * 20 / note_sur
                     new_note = round_up(new_note, 2)
                     note['valeur'] = str(new_note)

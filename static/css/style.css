@@ -183,6 +183,11 @@ hr {
     color: hsl(141, 71%, 48%);
 }
 
+.significatifFalse {
+    color: var(--border);
+    opacity: 0.8;
+}
+
 .column.is-full:not(+ .column.work) {
     display: none;
 }
@@ -452,4 +457,27 @@ button, input {
 
 .tabs.is-full ul {
     margin: 0 !important;
+}
+
+@media (min-width: 1024px) {
+    .navbar-burger {
+        display: block !important;
+    }
+
+    .level {
+        width: 100vw;
+        display: flex;
+        justify-content: space-between;
+        padding-right: 5em;
+        padding-left: 5em;
+    }
+
+    .level.no-pd {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .level .level-item {
+        flex-grow: unset;
+    }
 }
